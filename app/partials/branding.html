@@ -1,0 +1,439 @@
+<style>
+  .heroImage-banner {
+    z-index: 999;
+    padding: 0;
+    margin: 0;
+    background-color: black !important;
+    width: auto;
+  }
+
+  .heroImage {
+    z-index: 999;
+    padding: 0;
+    margin: 0;
+    width: auto;
+
+    margin-bottom: 30px;
+    margin-top: 10px;
+  }
+
+  .events-banner {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20%;
+  }
+
+  .caption {
+    color: black;
+    text-align: center;
+    margin: auto;
+  }
+
+  .captionText {
+    font-size: 3.333rem;
+    line-height: 1.1;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  .nav-line {
+    border-bottom: 2px solid black;
+  }
+
+    .caption-home-mobile {
+    text-align: center;
+    border-radius: 40px;
+    padding: 30px;
+    position: relative;
+    bottom: 25px;
+    z-index: 9999;
+    background: white;
+    width: 90%;
+    margin: auto;
+  }
+
+  .captionText-home {
+		font-size: 18px;
+    padding: 0 100px;
+	}
+
+  .secondText-home {
+		font-size: 40px;
+		line-height: 45px;
+		color: #01517D;
+		font-weight: 600;
+		margin-bottom: 25px;
+		padding: 0 70px;
+	}
+
+  .caption-button {
+    align-items: center;
+    background-color: #e81c2d;
+    border: 0px;
+    border-color: 1px #e81c2d;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: white;
+    display: flex;
+    font-size: 15px;
+    font-stretch: normal;
+    font-style: normal;
+    font-weight: bold;
+    justify-content: center;
+    letter-spacing: 1.35px;
+    line-height: normal;
+    margin-top: 1rem;
+    min-height: 48px;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    width: 265px;
+    margin: auto;
+  }
+
+  .caption-button:hover {
+    /*background-color: #a7111d;
+    border-color: #a7111d;*/
+    background-color: #D4E9E6;
+    border-color: #e81c2d;
+    color: black;
+    text-decoration: none;
+  }
+
+  .angle-text {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -35%);
+    color: white;
+    font-weight: bold;
+    width: fit-content;
+    text-shadow: 0 0 8px rgba(0, 0, 0, .35);
+    text-align: center;
+  }
+
+  .angle-caption-text {
+    width: max-content;
+    font-size: 30px;
+  }
+
+  .angleDiv-home {
+    border-left: 100vw solid black;
+    height: 100px;
+    border-top: 0 solid transparent;
+    border-bottom: 10rem solid transparent;
+  }
+
+  .angleDiv {
+    border-left: 100vw solid black;
+    height: 100px;
+    border-top: 0 solid transparent;
+    border-bottom: 10rem solid transparent;
+  }
+  .logo-text {
+    margin-bottom: 5px;
+    margin-top: 20px;
+    font-size: 12px;
+  }
+  .tp-logo {
+    width: 15%;
+    margin: auto;
+  }
+
+  .caption-home {
+    padding-top: 24%;
+  }
+ 
+ .caption {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  color: white;
+  width: fit-content;
+  text-align: left;
+
+}
+
+ .captionText {
+    font-size: 1rem;
+    letter-spacing: .13rem;
+    line-height: calc(1 + .2 / var(--font-body-scale));
+    text-transform: uppercase;
+  }
+.captionTextBody  {
+    margin: auto;
+}
+.btn-caption {
+    font-size: 15px;
+    color: rgb(220, 68, 5);
+    background: white;
+    padding: 15px 35px;
+    border-radius: 8px;
+}
+.btn-caption:hover {
+    color: white;
+    background: rgb(220, 68, 5);
+    text-decoration: none;
+}
+.btn-caption-mobile {
+    font-size: 15px;
+    color: rgb(220, 68, 5);
+    background: white;
+    padding: 15px 35px;
+    border-radius: 8px;
+}
+.btn-caption-mobile:hover {
+    color: white;
+    background: #00263e;
+    text-decoration: none;
+}
+.captionTextMobile {
+    margin: 0;
+    padding-top: 30px;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: .13rem;
+    line-height: calc(1 + .2 / var(--font-body-scale));
+    text-transform: uppercase;
+}
+  @media screen and (max-width: 1500px) {
+    .events-banner {
+      margin-bottom: 19%;
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+
+  }
+  @media screen and (max-width: 1334px) {
+    .secondText-home{
+      font-size: 35px;
+    }
+    .captionText-home {
+        font-size: 14px;
+    }
+    .caption-home {
+        padding-top: 20%;
+    }
+  }
+  @media screen and (max-width: 1320px) {
+    .secondText-home {
+      padding: 0 50px;
+    }
+  }
+
+  @media screen and (max-width: 1310px) {
+    .events-banner {
+      margin-bottom: 18%;
+    }
+  }
+    @media screen and (max-width: 1300px) {
+    .caption {
+        left: 27%;
+    }
+  }
+
+  @media screen and (max-width: 1260px) {
+    .captionText-home {
+      font-size: 14px;
+    }
+    .caption {
+        left: 29%;
+    }
+    .secondText-home {
+      font-size: 30px;
+      line-height: 40px;
+    }
+    .logo-text {
+      font-size: 10px;
+    }
+
+  }
+
+  @media screen and (max-width: 1200px) {
+    .events-banner {
+      margin-bottom: 16%;
+    }
+
+    .secondText-home {
+      margin-bottom: 30px;
+    }
+  }
+  @media screen and (max-width: 1130px) {
+    .captionText-home {
+        padding: 0 40px;
+    }
+    .secondText-home {
+        margin-bottom: 10px;
+    }
+    .captionTextBody {
+        font-size: 25px;
+    }
+    .caption {
+        left: 27%;
+    }
+  }
+  @media screen and (max-width: 1050px) {
+
+    .caption-button {
+      margin-bottom: 25px;
+    }
+  }
+  @media screen and (max-width: 1030px) {
+    .captionText-home {
+        padding: 0px 35px;
+    }
+    .secondText-home {
+        margin-bottom: 10px;
+    }
+  }
+  @media screen and (max-width: 1017px) {
+    .secondText-home {
+        font-size: 30px;
+    }
+    .captionText-home {
+      font-size: 15px;
+    }
+    .logo-text {
+      font-size: 10px;
+    }
+  }
+
+@media screen and (max-width: 1000px) {
+
+}
+
+  @media screen and (max-width: 991px) {
+    .caption-home {
+        padding-top: 20px;
+        padding-bottom: 20px;
+  }
+  @media screen and (max-width: 950px) {
+    .events-banner {
+      margin-bottom: 14%;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .events-banner {
+      margin-bottom: 13%;
+    }
+
+    .angle-caption-text {
+      font-size: 23px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .caption {
+      left: 3%;
+    }
+
+
+    .caption-button {
+      margin-bottom: 25px;
+    }
+
+    .banner-image {
+      border-bottom: 2px solid black;
+      margin: auto;
+    }
+
+    .captionText-home {
+      padding-bottom: 0;
+    }
+
+    .secondText-home {
+      padding: 0;
+      font-size: 25px;
+      line-height: 28px;
+    }
+  }
+
+  @media screen and (max-width: 750px) {
+    .events-banner {
+      margin-bottom: 12%;
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    .events-banner {
+      margin-bottom: 10%;
+    }
+    .captionText {
+      font-size: 20px !important;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .events-banner {
+      margin-bottom: 8%;
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    .events-banner {
+      margin-bottom: 6%;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    .caption-home-mobile {
+      padding-bottom: 0px
+    }
+  }
+
+
+</style>
+
+
+<div class="heroImage hidden-xs hidden-sm" ng-show="isActive('catalog')" style="padding: 0;margin:0; margin-bottom: 100px;">
+  <img src="https://thumbprint.com/four51_images/nest-banner.png" class="img-responsive" style="width: 100%;">
+  <!-- <div class="caption">
+    <p class="captionText">thompson thrift</p>
+    <h2 class="captionTextBody"><strong>Offering quality merchandise to our team<br/>members across the country</strong></k2>
+    <div class="captionBtn" style="padding-top: 20px;">
+        <a href="catalog/tts_allapp" class="button btn-caption">Shop all</a>
+    </div>
+  </div> -->
+</div>
+
+<div class="heroImage hidden-md hidden-lg" ng-show="isActive('catalog')" style="padding: 0;margin:0;margin-bottom: 100px;">
+  <img src="https://thumbprint.com/four51_images/nest-banner.png" class="img-responsive" style="width: 100%;">
+  <!-- <div class="captionMobile" style="background: rgb(220, 68, 5);text-align: center;">
+    <p class="captionTextMobile">thompson thrift</p>
+    <h2 class="captionTextBodyMobile" style="margin: auto;color: white;padding: 10px 0;"><strong>Offering quality merchandise to our team<br/>members across the country</strong></k2>
+    <div class="captionBtn" style="padding: 20px 0;">
+        <a href="catalog/tts_allapp" class="button btn-caption-mobile">Shop all</a>
+    </div>
+  </div> -->
+</div>
+
+
+
+<!--<div class="heroImage-home row" ng-show="isActive('catalog')" style="">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<img class="img-responsive banner-xl-image" src="https://thumbprint.com/four51_images/westminter_hero3.png" alt="PODS Apparel Store">
+	</div>
+</div>-->
+
+<!--<div style="position: relative; width: 100%; height: 100%; overflow: hidden;" ng-show="isActive('catalog')">
+  <video id="video" width="100%" height="100%" autoplay loop muted style="object-fit: cover; transform: scale(1);">
+    <source src="https://www.mymillennium.us/wp-content/uploads/2022/12/home-earth-light-small.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div style="position: absolute; top: 25%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; font-size: 40px;">
+    <strong>To boldly go where no other fiber optic company has gone before!</strong>
+  </div>
+</div>-->
+
+<!--<categorymodal class="hidden" ng-show="isActive('catalog') && (conSpringUser === true || conOfficeSpringUser === true)"></categorymodal> -->
+
+
+  <!--<div class="product-search hidden-md hidden-lg">
+  <productsearchinput></productsearchinput>
+</div>-->

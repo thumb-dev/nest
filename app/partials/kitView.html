@@ -1,0 +1,590 @@
+<style media="screen">
+/* ─── Kit page layout ─── */
+.kit-page { font-family: inherit; }
+
+/* Kit image panel */
+.kit-img-panel { border: none; box-shadow: 0 2px 10px rgba(0,0,0,.07); border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+.kit-img-panel .panel-body { padding: 16px; background: #f8f7f4; text-align: center; }
+
+/* ─── Kit items card ─── */
+.kit-items-card { border: 1px solid #e4e2dc; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 0; }
+.kit-items-card__header { background: #1C9ABF; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+.kit-items-card__title { color: #fff; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin: 0; }
+.kit-items-card__progress { display: flex; align-items: center; gap: 6px; }
+.kit-items-card__progress-text { color: rgba(255,255,255,.9); font-size: 11px; font-weight: 600; }
+.kit-items-card__body { padding: 8px; background: #fff; }
+
+/* Kit item rows */
+.kit-item-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border: 2px solid transparent; margin-bottom: 4px; cursor: pointer; transition: all .15s; }
+.kit-item-row:last-child { margin-bottom: 0; }
+.kit-item-row:hover { background: #EEF8FB; border-color: #B9E0EC; }
+.kit-item-row.active { background: #EAF6FA; border-color: #1C9ABF; }
+.kit-item-row.is-done { border-color: #bbf7d0; background: #f0fdf4; }
+.kit-item-row.is-done:hover { background: #dcfce7; }
+.kit-item-row.needs-action { border-color: #fde68a; background: #fffbeb; }
+.kit-item-row.needs-action:hover { background: #fef3c7; }
+.kit-item-row.is-included { border-color: #f0eeea; background: #fafaf8; cursor: default; }
+
+/* Item status icon */
+.kit-item-status { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+.kit-item-status--done { background: #dcfce7; color: #15803d; }
+.kit-item-status--action { background: #fef3c7; color: #d97706; }
+.kit-item-status--active { background: #D2EDF5; color: #15738F; }
+.kit-item-status--included { background: #f0eeea; color: #c8c6c2; }
+
+/* Item info */
+.kit-item-info { flex: 1; min-width: 0; }
+.kit-item-info__name { font-size: 13px; font-weight: 600; color: #1a1a1a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 2px; }
+.kit-item-info__qty { font-size: 11px; color: #9a9895; font-family: monospace; }
+
+/* Item badge */
+.kit-item-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+.kit-item-badge--done { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.kit-item-badge--action { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.kit-item-badge--active { background: #D2EDF5; color: #15738F; border: 1px solid #8ECFE2; }
+.kit-item-badge--included { background: #f8f7f4; color: #9a9895; border: 1px solid #e4e2dc; }
+
+/* ─── How-to guide (before kit is started) ─── */
+.kit-guide { background: linear-gradient(135deg, #EEF8FB 0%, #E3F3F8 100%); border: 1px solid #B9E0EC; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.kit-guide__title { font-size: 15px; font-weight: 800; color: #15738F; margin: 0 0 6px; }
+.kit-guide__sub { font-size: 13px; color: #374151; margin: 0 0 16px; }
+.kit-guide__steps { display: flex; flex-direction: column; gap: 10px; }
+.kit-guide__step { display: flex; align-items: flex-start; gap: 10px; }
+.kit-guide__step-num { width: 26px; height: 26px; background: #1C9ABF; color: #fff; border-radius: 50%; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.kit-guide__step-text { font-size: 13px; color: #374151; line-height: 1.5; }
+.kit-guide__step-text strong { color: #15738F; }
+
+/* ─── Right column: order panel ─── */
+.kit-order-panel { border: 1px solid #e4e2dc; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.kit-order-panel__header { background: #1C9ABF; padding: 16px 20px; }
+.kit-order-panel__header h3 { margin: 0; color: #fff; font-size: 15px; font-weight: 700; }
+.kit-order-panel__header p { margin: 4px 0 0; color: rgba(255,255,255,.9); font-size: 12px; }
+.kit-order-panel__body { padding: 20px; background: #fff; }
+.kit-order-panel__step-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #9a9895; margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
+.kit-order-panel__step-label .step-num { width: 20px; height: 20px; background: #1C9ABF; color: #fff; border-radius: 50%; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+.kit-order-panel__divider { border: none; border-top: 1px solid #e4e2dc; margin: 18px 0; }
+.kit-start-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 10px; border: none; background: #1C9ABF; color: #fff; cursor: pointer; transition: background .15s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; }
+.kit-start-btn:hover { background: #15738F; }
+.kit-start-btn .fa { font-size: 16px; }
+.kit-qty-label { font-size: 13px; font-weight: 700; color: #15738F; margin-bottom: 6px; display: block; }
+.kit-qty-hint { font-size: 12px; color: #9a9895; margin-top: 6px; }
+
+/* Configuring state */
+.kit-config-header { background: #1C9ABF; color: #fff; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; }
+.kit-config-header__eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.9); margin-bottom: 3px; }
+.kit-config-header__name { font-size: 17px; font-weight: 700; }
+.kit-save-btn { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 10px; border: none; background: #15803d; color: #fff; cursor: pointer; transition: background .15s; margin-top: 4px; }
+.kit-save-btn:hover { background: #166534; }
+.kit-save-btn:disabled { background: #9a9895; cursor: not-allowed; }
+
+/* Create new button */
+.create-new-kit { background: #1C9ABF; border-color: #1C9ABF; border-radius: 20px; max-width: 160px; transition: background .15s; }
+.create-new-kit:hover { background: #15738F; border-color: #15738F; }
+.create-new-kit h4 { font-size: 12px; font-weight: 700; margin: 0; padding: 7px 4px; }
+.create-new-kit a { color: #fff !important; text-decoration: none !important; }
+
+/* Variant list */
+.product-variants ul { padding: 0; margin: 8px 0 0; list-style: none; }
+.product-variants li { border: 1px solid #e4e2dc; border-radius: 8px; cursor: pointer; transition: all .12s; margin-bottom: 6px; }
+.product-variants li:hover { background: #EEF8FB; border-color: #8ECFE2; }
+.product-variants a { display: block; padding: 10px 14px; color: inherit; text-decoration: none; }
+.product-variants h5 { margin: 0; font-size: 13px; font-weight: 600; color: #15738F; }
+
+/* Top spacing */
+.product-detail-default.kit-page { padding-top: 32px; }
+
+/* Clean image — full width, no box */
+.kit-img-clean { margin-bottom: 16px; }
+.kit-img-clean img { display: block; width: 100%; max-height: 360px; object-fit: contain; border-radius: 10px; }
+
+/* Kit title block — use .kit-order-panel__header prefix to beat the p override */
+.kit-order-panel__header .kit-panel-title { font-size: 24px !important; font-weight: 800 !important; color: #fff !important; margin: 0 0 4px !important; line-height: 1.15; }
+.kit-order-panel__header .kit-panel-price { font-size: 22px !important; font-weight: 700 !important; color: #ffffff !important; margin: 0 0 6px !important; letter-spacing: -.02em; }
+.kit-order-panel__header .kit-panel-subtitle { font-size: 12px !important; color: rgba(255,255,255,.9) !important; font-weight: 500 !important; margin: 0 !important; letter-spacing: .02em; }
+.kit-order-panel__header .kit-panel-item-name { font-size: 20px !important; font-weight: 700 !important; color: #fff !important; margin: 0 !important; line-height: 1.2; }
+
+/* Kit includes panel */
+.kit-includes { border: 1px solid #e4e2dc; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 20px; }
+.kit-includes__header { background: #1C9ABF; padding: 13px 18px; }
+.kit-includes__header h3 { margin: 0; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.kit-includes__list { list-style: none; margin: 0; padding: 8px; }
+.kit-includes__item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; }
+.kit-includes__item + .kit-includes__item { border-top: 1px solid #f0eeea; }
+.kit-includes__icon { color: #15803d; font-size: 14px; flex-shrink: 0; }
+.kit-includes__name { font-size: 13px; font-weight: 600; color: #1a1a1a; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kit-includes__qty { font-size: 11px; font-weight: 700; color: #5f5e5a; background: #f8f7f4; border: 1px solid #e4e2dc; border-radius: 20px; padding: 2px 9px; flex-shrink: 0; white-space: nowrap; }
+
+/* Panel overrides */
+.panel-primary > .panel-heading { background: #1C9ABF; border-color: #1C9ABF; }
+</style>
+
+<section class="product-detail-default kit-page">
+	<loadingindicator ng-show="loadingIndicator" title="{{'Please wait while we fetch kit information' | r | xlat}}" />
+
+	<!-- LEFT COLUMN -->
+	<div class="col-md-4 col-md-offset-1 col-collapse">
+
+		<!-- Kit image — always shows the kit's main image -->
+		<div class="kit-img-clean">
+			<img class="product-image-large img-responsive" ng-src="{{Kit.KitParent.LargeImageUrl}}" imageonload style="margin:0 auto;" />
+			<div class="empty" ng-hide="Kit.KitParent.LargeImageUrl">
+				<span class="fa empty"><i class="fa fa-camera"></i></span>
+			</div>
+		</div>
+
+		<!-- Kit items list -->
+		<div class="col-md-12 col-collapse">
+			<div class="kit-items-card">
+				<div class="kit-items-card__header">
+					<span class="kit-items-card__title">Kit Contents</span>
+					<div class="kit-items-card__progress">
+						<span class="kit-items-card__progress-text">{{Kit.KitItems.length}} items</span>
+					</div>
+				</div>
+				<div class="kit-items-card__body">
+					<div ng-repeat="item in Kit.KitItems"
+					     class="kit-item-row"
+					     ng-click="setItemAsCurrent(item)"
+					     ng-class="{
+					       'active':       item.ID == ActiveKitItem.ID,
+					       'is-done':      item.LineItem.IsConfigurable && item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID,
+					       'needs-action': item.LineItem.IsConfigurable && !item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID,
+					       'is-included':  !item.LineItem.IsConfigurable
+					     }">
+
+						<!-- Status icon -->
+						<div class="kit-item-status"
+						     ng-class="{
+						       'kit-item-status--active':   item.ID == ActiveKitItem.ID,
+						       'kit-item-status--done':     item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID,
+						       'kit-item-status--action':   item.LineItem.IsConfigurable && !item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID,
+						       'kit-item-status--included': !item.LineItem.IsConfigurable
+						     }">
+							<i class="fa"
+							   ng-class="{
+							     'fa-pencil':    item.ID == ActiveKitItem.ID,
+							     'fa-check':     item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID,
+							     'fa-exclamation-triangle': item.LineItem.IsConfigurable && !item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID,
+							     'fa-minus':     !item.LineItem.IsConfigurable
+							   }"
+							   aria-hidden="true"></i>
+						</div>
+
+						<!-- Item info -->
+						<div class="kit-item-info">
+							<div class="kit-item-info__name">{{kitItemNames[item.ID] || item.LineItem.Product.Name || item.Variant.ExternalID || ('Item ' + ($index + 1))}}</div>
+							<!-- Show pre-selected variant (color/size) for locked items -->
+							<div class="kit-item-info__qty" ng-show="item.Variant.ExternalID && !item.LineItem.IsConfigurable">
+								{{item.Variant.ExternalID}} &nbsp;·&nbsp; Qty: {{item.Quantity}}
+							</div>
+							<div class="kit-item-info__qty" ng-hide="item.Variant.ExternalID && !item.LineItem.IsConfigurable">
+								Qty: {{item.Quantity}}
+							</div>
+						</div>
+
+						<!-- Status badge -->
+						<span class="kit-item-badge kit-item-badge--active"
+						      ng-show="item.ID == ActiveKitItem.ID">
+							<i class="fa fa-pencil"></i> Editing
+						</span>
+						<span class="kit-item-badge kit-item-badge--done"
+						      ng-show="item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID">
+							<i class="fa fa-check"></i> Done
+						</span>
+						<span class="kit-item-badge kit-item-badge--action"
+						      ng-show="item.LineItem.IsConfigurable && !item.LineItem.IsConfigured && item.ID != ActiveKitItem.ID">
+							! Action Needed
+						</span>
+						<span class="kit-item-badge kit-item-badge--included"
+						      ng-hide="item.LineItem.IsConfigurable">
+							Included
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- RIGHT COLUMN -->
+	<div class="col-md-5 col-md-offset-1 col-collapse">
+
+		<staticspecstable ng-show="StaticSpecGroups && user.Permissions.contains('ViewNonCustomizableSpecs')" specgroups="StaticSpecGroups" length="LineItem.StaticSpecLength"/>
+
+		<!-- ORDER PANEL -->
+		<form name="addToOrderForm" novalidate="">
+			<div class="kit-order-panel">
+
+				<!-- Parent view: Start Kit -->
+				<div ng-if="LineItem.IsKitParent">
+					<div class="kit-order-panel__header">
+						<p class="kit-panel-title">{{Kit.KitParent.Name}}</p>
+						<p class="kit-panel-price" ng-show="!(user.Permissions.contains('HidePricing')) && Kit.KitParent.PriceSchedule.PriceBreaks.length == 1">
+							{{Kit.KitParent.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
+						</p>
+						<p class="kit-panel-subtitle">{{kitSkipQuantity ? 'Configure each item in your kit' : 'Set your quantity below, then configure each item'}}</p>
+					</div>
+					<div class="kit-order-panel__body">
+
+						<!-- Error -->
+						<div class="alert alert-danger" ng-show="!allowAddToOrder && !canCreateVariant">
+							<i class="fa fa-ban"></i>
+							{{'Your current order does not allow this product to be added to your cart' | r | xlat}}
+						</div>
+
+						<!-- Kit-level specs -->
+						<kitaddtoorderspecs template="{{LineItem.Product.InteropID}}" ng-show="allowAddToOrder"></kitaddtoorderspecs>
+
+						<div ng-show="allowAddToOrder">
+
+							<!-- Starting automatically (Nest: no quantity step, quantity 1) -->
+							<p ng-show="kitAutoStarting && !kitStarted" style="font-size:14px;color:#374151;text-align:center;margin:6px 0">
+								<i class="fa fa-spinner fa-spin"></i> Starting your kit&hellip;
+							</p>
+
+							<!-- Quantity section — hidden once kit is started -->
+							<div ng-hide="kitStarted || kitAutoStarting">
+							<div ng-hide="kitSkipQuantity">
+								<div class="kit-order-panel__step-label">
+									<span class="step-num">1</span> Set Your Quantity
+								</div>
+								<p style="font-size:13px;color:#374151;margin:0 0 10px">How many of this kit would you like to order?</p>
+								<div ng-if="!allowAddFromVariantList">
+									<label class="kit-qty-label">Order Quantity</label>
+									<quantityfield required="true" lineitem="LineItem" class="quantity" />
+									<p class="kit-qty-hint"><i class="fa fa-info-circle"></i> Enter the number of complete kits you need.</p>
+								</div>
+								<p ng-show="LineItem.Product.DisplayInventory && (LineItem.Variant || LineItem.Product.Variants.length == 0)" style="font-size:12px;color:#9a9895;margin-top:8px">
+									{{'Quantity Available' | r | xlat}}: {{inventoryDisplay(LineItem.Product, LineItem.Variant)}}
+								</p>
+								<hr class="kit-order-panel__divider" />
+							</div>
+								<div class="kit-order-panel__step-label">
+									<span class="step-num">{{kitSkipQuantity ? 1 : 2}}</span> Configure Your Items
+								</div>
+								<p style="font-size:13px;color:#374151;margin:0 0 14px">After you click <strong>Start Kit</strong>, select each item on the left that shows <span style="color:#b45309;font-weight:700">! Action Needed</span> and complete it.</p>
+							</div>
+
+							<!-- START KIT — only shown before kit is started -->
+							<button class="kit-start-btn" type="button" ng-click="saveOrder()" ng-hide="kitStarted || kitAutoStarting">
+								<loadingindicator ng-show="addToOrderIndicator" />
+								<i class="fa fa-play-circle" aria-hidden="true"></i>
+								Start Kit
+							</button>
+
+							<!-- ADD TO CART — only shown when kit started AND all items done -->
+							<button class="kit-start-btn" type="button" ng-click="addKitToCart()"
+							        ng-show="kitStarted && allItemsConfigured"
+							        style="background:#15803d">
+								<loadingindicator ng-show="addToOrderIndicator" />
+								<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+								Proceed to Cart
+							</button>
+
+							<!-- Items still pending message -->
+							<div ng-show="kitStarted && !allItemsConfigured"
+							     style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;text-align:center">
+								<p style="margin:0;font-size:13px;color:#b45309;font-weight:600">
+									<i class="fa fa-exclamation-triangle"></i>
+									Complete all items marked <strong>! Action Needed</strong> on the left before you can check out.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Child view: Configure item -->
+				<div ng-if="LineItem.IsKitChild">
+					<div class="kit-order-panel__header">
+						<p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.9);margin:0 0 6px">Configuring Item</p>
+						<p class="kit-panel-item-name">{{kitItemNames[ActiveKitItem.ID] || LineItem.Product.Name || ActiveKitItem.LineItem.Product.Name || LineItem.Variant.ExternalID || LineItem.Product.ExternalID}}</p>
+					</div>
+					<div class="kit-order-panel__body">
+
+						<!-- Locked color badge — shown when this kit slot has a pre-set color -->
+						<div ng-show="kitLockedColor"
+						     style="display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:12px">
+							<i class="fa fa-lock" style="color:#15803d;font-size:14px"></i>
+							<span style="font-size:13px;color:#166534;font-weight:600">Color: {{kitLockedColor}}</span>
+							<span style="font-size:12px;color:#374151;font-weight:400">— pre-selected for this kit</span>
+						</div>
+
+						<kitaddtoorderspecs template="{{LineItem.Product.InteropID}}" ng-show="allowAddToOrder"></kitaddtoorderspecs>
+
+						<!-- Variant selection -->
+						<div ng-if="ActiveKitItem.RequiresVariantSelection">
+
+							<!-- Selected design panel — shown once a variant has been picked -->
+							<div ng-show="LineItem.Variant && !LineItem.Variant.IsDefaultVariant"
+							     style="background:#f0fdf4;border:2px solid #15803d;border-radius:10px;padding:14px;margin-bottom:16px">
+								<p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#15803d;margin:0 0 3px">
+									<i class="fa fa-check-circle" aria-hidden="true"></i> Selected Design
+								</p>
+								<p style="font-size:16px;font-weight:700;color:#166534;margin:0 0 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+									{{LineItem.Variant.ExternalID}}
+								</p>
+								<div style="display:flex;gap:8px;flex-wrap:wrap">
+									<button type="button" class="btn btn-default btn-sm"
+									        ng-click="setDesignMode('edit')">
+										<i class="fa fa-pencil" aria-hidden="true"></i> View / Edit
+									</button>
+								</div>
+							</div>
+
+							<!-- Edit design: inline spec form pre-populated from selected variant -->
+							<div ng-if="designMode === 'edit'"
+							     style="border:1px solid #e4e2dc;border-radius:10px;padding:16px;background:#fafaf8;margin-bottom:16px">
+								<p style="font-size:13px;font-weight:700;color:#15738F;margin:0 0 12px">
+									<i class="fa fa-pencil"></i> Edit Design
+								</p>
+								<!-- Variant preview — loading while full variant data fetches -->
+								<div ng-if="!editVariantFull" style="text-align:center;padding:20px 0;color:#9a9895;margin-bottom:10px">
+									<i class="fa fa-spinner fa-spin" style="font-size:20px;margin-bottom:8px;display:block"></i>
+									<span style="font-size:12px;font-weight:600">Rendering your design…</span><br>
+									<span style="font-size:11px">This may take a moment</span>
+								</div>
+								<div ng-if="editVariantFull" style="margin-bottom:14px">
+									<!-- Raster preview image -->
+									<div ng-show="editVariantFull.PreviewUrl || editVariantFull.LargeImageUrl"
+									     style="text-align:center;margin-bottom:10px">
+										<img ng-src="{{editVariantFull.PreviewUrl || editVariantFull.LargeImageUrl}}"
+										     style="max-width:100%;max-height:220px;border-radius:6px;border:1px solid #e4e2dc;box-shadow:0 2px 8px rgba(0,0,0,.08)" />
+									</div>
+									<!-- PDF proof link -->
+									<a ng-show="editVariantFull.ProofUrl"
+									   ng-href="{{editVariantFull.ProofUrl}}"
+									   target="_blank"
+									   class="btn btn-default"
+									   style="width:100%;font-size:12px;font-weight:600;margin-bottom:4px">
+										<i class="fa fa-file-pdf-o" aria-hidden="true"></i> Download PDF Proof
+									</a>
+									<!-- Fallback when neither image nor proof is available -->
+									<div ng-hide="editVariantFull.PreviewUrl || editVariantFull.LargeImageUrl || editVariantFull.ProofUrl"
+									     style="text-align:center;padding:12px;color:#9a9895;font-size:12px;background:#f0eeea;border-radius:6px">
+										<i class="fa fa-image"></i> No preview available for this design
+									</div>
+									<!-- Preview freshness note -->
+									<p ng-show="editVariantFull.PreviewUrl || editVariantFull.LargeImageUrl || editVariantFull.ProofUrl"
+									   style="font-size:11px;color:#9a9895;text-align:center;margin:6px 0 0;line-height:1.4">
+										<i class="fa fa-info-circle"></i> The preview reflects your last saved version. Save your changes and reopen this view to see the updated render.
+									</p>
+								</div>
+								<div ng-show="showInlineVariantErrors && inlineVariantErrors.length"
+								     class="alert alert-danger" style="font-size:12px;padding:8px 12px">
+									<ul style="margin:0;padding-left:16px">
+										<li ng-repeat="e in inlineVariantErrors">{{e}}</li>
+									</ul>
+								</div>
+								<div ng-repeat="(key, spec) in inlineVariant.Specs"
+								     ng-hide="spec.Hidden"
+								     style="margin-bottom:12px">
+									<label style="font-size:12px;font-weight:600;color:#374151">
+										{{spec.Label || spec.Name}}<span ng-show="spec.Required" style="color:#dc2626"> *</span>
+									</label>
+									<input ng-if="isPhoneSpec(spec)"
+									       type="tel" class="form-control"
+									       ng-model="spec.Value"
+									       ng-change="formatPhoneSpec(spec)"
+									       maxlength="12"
+									       placeholder="xxx-xxx-xxxx" />
+								<input ng-if="!isPhoneSpec(spec) && (!spec.Options || spec.Options.length === 0)"
+									       type="text" class="form-control"
+									       ng-model="spec.Value"
+									       placeholder="{{spec.Label || spec.Name}}" />
+									<select ng-if="spec.Options && spec.Options.length > 0"
+									        class="form-control"
+									        ng-model="spec.Value"
+									        ng-options="o.Value as o.Value for o in spec.Options">
+										<option value="">-- Select --</option>
+									</select>
+								</div>
+								<button type="button" class="kit-save-btn"
+								        ng-click="saveInlineVariant()"
+								        ng-disabled="inlineVariantSaving">
+									<loadingindicator ng-show="inlineVariantSaving" />
+									<i class="fa fa-check" aria-hidden="true"></i>
+									{{inlineVariantSaving ? 'Saving...' : 'Save changes'}}
+								</button>
+								<button type="button" class="btn btn-link"
+								        style="width:100%;font-size:12px;margin-top:8px;color:#9a9895"
+								        ng-click="setDesignMode(null)">
+									← Cancel
+								</button>
+							</div>
+
+							<!-- Two-button chooser -->
+							<div ng-if="ActiveKitItem.Variant.IsDefaultVariant" style="margin-bottom:16px">
+								<div style="display:flex;gap:10px">
+									<button type="button"
+									        class="btn btn-primary"
+									        style="flex:1;font-weight:700;text-transform:none;letter-spacing:normal;font-size:13px"
+									        ng-click="setDesignMode('create')"
+									        ng-class="{'active': designMode === 'create'}">
+										<i class="fa fa-plus"></i> Create new
+									</button>
+									<button type="button"
+									        class="btn btn-default"
+									        style="flex:1;font-weight:700;text-transform:none;letter-spacing:normal;font-size:13px"
+									        ng-click="setDesignMode('choose')"
+									        ng-class="{'active': designMode === 'choose'}"
+									        ng-disabled="!LineItem.Product.VariantCount"
+									        title="{{!LineItem.Product.VariantCount ? 'No previous designs available' : 'Choose from your saved designs'}}">
+										<i class="fa fa-list"></i> Choose previous design
+									</button>
+								</div>
+								<p ng-show="!LineItem.Product.VariantCount"
+								   style="font-size:11px;color:#9a9895;margin:6px 0 0;text-align:center">
+									No previous designs yet — click <strong>Create new</strong> to make your first.
+								</p>
+							</div>
+
+							<!-- Choose Previous Design: variant list -->
+							<div ng-if="ActiveKitItem.Variant.IsDefaultVariant && designMode === 'choose'">
+								<div class="view-form-icon" ng-if="LineItem.Product.VariantCount > settings.pageSize || searchTerm" style="margin-bottom:10px">
+									<div class="input-group">
+										<input ng-model="searchTerm" type="text" class="form-control" placeholder="{{'Search designs' | r | xlat}}" />
+										<i class="fa fa-search"></i>
+										<div class="input-group-btn">
+											<button type="button" class="btn btn-default" ng-click="searchVariants(searchTerm)">Search</button>
+										</div>
+									</div>
+								</div>
+								<div class="product-variants">
+									<ul>
+										<loadingindicator ng-show="searchIndicator" />
+										<li ng-repeat="v in LineItem.Product.Variants | filter:getVariantColorFilter(ActiveKitItem.ID) | paginate:(settings.currentPage-1) * settings.pageSize | limitTo:settings.pageSize"
+										    ng-click="selectVariant(v)"
+										    ng-style="{'border-color': LineItem.Variant.InteropID == v.InteropID ? '#15803d' : '', 'background': LineItem.Variant.InteropID == v.InteropID ? '#f0fdf4' : ''}">
+											<a>
+												<div class="row">
+													<div class="col-xs-9">
+														<h5>{{v.ExternalID}}</h5>
+														<p ng-show="v.Description" ng-bind-html="trustedDescription(v)" style="font-size:12px;color:#9a9895;margin:0"></p>
+													</div>
+													<div class="col-xs-3 text-right" style="padding-top:4px">
+														<span ng-show="LineItem.Variant.InteropID == v.InteropID"
+														      style="color:#15803d;font-size:13px;font-weight:700">
+															<i class="fa fa-check-circle"></i> Selected
+														</span>
+													</div>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div ng-show="LineItem.Product.VariantCount > settings.pageSize">
+									<pagination ng-change="paged()" ng-model="settings.currentPage" page="settings.currentPage" max-size="8" rotate="false" boundary-links="true" total-items="LineItem.Product.VariantCount" items-per-page="settings.pageSize" direction-links="true" previous-text="{{'Previous' | xlat}}" next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}" last-text="{{'Last' | xlat}}"></pagination>
+								</div>
+							</div>
+
+							<!-- Create New: inline spec form -->
+							<div ng-if="ActiveKitItem.Variant.IsDefaultVariant && designMode === 'create'"
+							     style="border:1px solid #e4e2dc;border-radius:10px;padding:16px;background:#fafaf8">
+								<p style="font-size:13px;font-weight:700;color:#15738F;margin:0 0 12px">
+									<i class="fa fa-pencil"></i> New Design Details
+								</p>
+								<div ng-show="showInlineVariantErrors && inlineVariantErrors.length"
+								     class="alert alert-danger" style="font-size:12px;padding:8px 12px">
+									<ul style="margin:0;padding-left:16px">
+										<li ng-repeat="e in inlineVariantErrors">{{e}}</li>
+									</ul>
+								</div>
+								<div ng-repeat="(key, spec) in inlineVariant.Specs"
+								     ng-hide="spec.Hidden"
+								     style="margin-bottom:12px">
+									<label style="font-size:12px;font-weight:600;color:#374151">
+										{{spec.Label || spec.Name}}<span ng-show="spec.Required" style="color:#dc2626"> *</span>
+									</label>
+									<input ng-if="isPhoneSpec(spec)"
+									       type="tel" class="form-control"
+									       ng-model="spec.Value"
+									       ng-change="formatPhoneSpec(spec)"
+									       maxlength="12"
+									       placeholder="xxx-xxx-xxxx" />
+								<input ng-if="!isPhoneSpec(spec) && (!spec.Options || spec.Options.length === 0)"
+									       type="text" class="form-control"
+									       ng-model="spec.Value"
+									       placeholder="{{spec.Label || spec.Name}}" />
+									<select ng-if="spec.Options && spec.Options.length > 0"
+									        class="form-control"
+									        ng-model="spec.Value"
+									        ng-options="o.Value as o.Value for o in spec.Options">
+										<option value="">-- Select --</option>
+									</select>
+								</div>
+								<button type="button"
+								        class="kit-save-btn"
+								        ng-click="saveInlineVariant()"
+								        ng-disabled="inlineVariantSaving">
+									<loadingindicator ng-show="inlineVariantSaving" />
+									<i class="fa fa-check" aria-hidden="true"></i>
+									{{inlineVariantSaving ? 'Saving...' : 'Save design'}}
+								</button>
+								<button type="button"
+								        class="btn btn-link"
+								        style="width:100%;font-size:12px;margin-top:8px;color:#9a9895"
+								        ng-click="setDesignMode(null)">
+									← Go back
+								</button>
+							</div>
+						</div>
+
+						<!-- Quantity info — hidden in create/edit mode and when variant selection is required but none chosen yet -->
+						<div ng-if="designMode !== 'create' && designMode !== 'edit' && (!ActiveKitItem.RequiresVariantSelection || (LineItem.Variant && !LineItem.Variant.IsDefaultVariant))" ng-show="allowAddToOrder" style="margin-top:16px">
+							<p ng-show="LineItem.Product.DisplayInventory && (LineItem.Variant || LineItem.Product.Variants.length == 0)" style="font-size:12px;color:#9a9895">
+								{{'Quantity Available' | r | xlat}}: {{inventoryDisplay(LineItem.Product, LineItem.Variant)}}
+							</p>
+
+							<!-- Last-item hint -->
+							<!-- Last-item hint — message changes based on first-time vs re-edit -->
+							<p ng-show="isLastConfigurableItem && !kitWasCompleteOnEntry"
+							   style="font-size:12px;color:#15803d;font-weight:600;text-align:center;margin-bottom:8px">
+								<i class="fa fa-check-circle" aria-hidden="true"></i>
+								Last item — saving will add your kit to the cart.
+							</p>
+							<p ng-show="isLastConfigurableItem && kitWasCompleteOnEntry"
+							   style="font-size:12px;color:#15738F;font-weight:600;text-align:center;margin-bottom:8px">
+								<i class="fa fa-check-circle" aria-hidden="true"></i>
+								Save your changes and return to the kit summary.
+							</p>
+							<!-- Save button -->
+							<button class="kit-save-btn" type="button" ng-click="saveKitItem()" ng-disabled="LineItem.Specs.Checkbox.Value === 'No' || ((lineItemErrors && lineItemErrors.length > 0) && !(ActiveKitItem.RequiresVariantSelection && LineItem.Variant && !LineItem.Variant.IsDefaultVariant))"
+							        ng-style="{'background': (isLastConfigurableItem && !kitWasCompleteOnEntry) ? '#15803d' : ''}">
+								<loadingindicator ng-show="addToOrderIndicator" />
+								<i ng-show="lineItemErrors.length > 0 && !(ActiveKitItem.RequiresVariantSelection && LineItem.Variant && !LineItem.Variant.IsDefaultVariant)" class="fa fa-warning"></i>
+								<i class="fa" ng-class="(isLastConfigurableItem && !kitWasCompleteOnEntry) ? 'fa-shopping-cart' : 'fa-check'" aria-hidden="true"></i>
+								<span ng-hide="isLastConfigurableItem">Save &amp; Continue →</span>
+								<span ng-show="isLastConfigurableItem && !kitWasCompleteOnEntry">Save &amp; Add to Cart</span>
+								<span ng-show="isLastConfigurableItem && kitWasCompleteOnEntry">Save Changes</span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</div>
+
+	<!-- ERROR MESSAGING -->
+	<div class="navbar-fixed-bottom">
+		<div class="view-error-message" ng-show="showAddToCartErrors && lineItemErrors.length > 0">
+			<ul class="alert-warning">
+				<li class="text-center">
+					<span class="badge"><i class="fa fa-exclamation-circle fa-inverse"></i> {{lineItemErrors.length}}</span>
+				</li>
+				<li class="text-center">
+					<ul ng-class="{'one': errorSection == 'open', 'two': errorSection == ''}">
+						<li class="alert-warning" ng-repeat="e in lineItemErrors">{{e | xlat}}</li>
+						<li class="alert-warning" ng-show="variantLineItems[v.InteropID].qtyError">{{variantLineItems[v.InteropID].qtyError}}</li>
+					</ul>
+				</li>
+				<li class="text-center">
+					<a ng-show="lineItemErrors.length > 1">
+						<i class="fa fa-caret-down" ng-click="errorSection = 'open'" ng-hide="errorSection == 'open'"></i>
+						<i class="fa fa-caret-up" ng-click="errorSection = ''" ng-show="errorSection == 'open'"></i>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</section>
+<ul><li><contentmodal></contentmodal></li></ul>

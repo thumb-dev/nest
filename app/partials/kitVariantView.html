@@ -1,0 +1,163 @@
+<style>
+.kvv-page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; font-family: inherit; }
+.kvv-context { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; color: #9a9895; font-size: 13px; }
+.kvv-context a { color: #15738F; text-decoration: none; font-weight: 500; }
+.kvv-context a:hover { text-decoration: underline; }
+.kvv-banner { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+.kvv-banner__icon { width: 40px; height: 40px; background: #15803d; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.kvv-banner__icon i { color: #fff; font-size: 18px; }
+.kvv-banner__text h4 { margin: 0 0 2px; color: #15803d; font-size: 15px; font-weight: 700; }
+.kvv-banner__text p { margin: 0; color: #166534; font-size: 13px; }
+.kvv-cols { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.kvv-left { flex: 1 1 380px; min-width: 280px; }
+.kvv-right { flex: 0 0 320px; min-width: 280px; }
+.kvv-preview-card { background: #fff; border: 1px solid #e4e2dc; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+.kvv-preview-card__img { background: #f8f7f4; padding: 24px; text-align: center; min-height: 200px; display: flex; align-items: center; justify-content: center; }
+.kvv-preview-card__img img { max-height: 420px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.14); }
+.kvv-preview-card__actions { border-top: 1px solid #e4e2dc; padding: 14px 16px; display: flex; gap: 8px; justify-content: center; background: #fafaf8; flex-wrap: wrap; }
+.kvv-preview-card__actions .btn { border-radius: 20px; font-size: 12px; font-weight: 600; padding: 6px 16px; }
+.kvv-info-card { background: #fff; border: 1px solid #e4e2dc; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+.kvv-info-card__header { background: #1C9ABF; padding: 20px 22px; }
+.kvv-info-card__header h3 { margin: 0 0 4px; color: #fff; font-size: 20px; font-weight: 700; line-height: 1.3; word-break: break-word; }
+.kvv-info-card__header p { margin: 0; color: rgba(255,255,255,.9); font-size: 12px; }
+.kvv-info-card__body { padding: 22px; }
+.kvv-info-card__badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; color: #5f5e5a; background: #f8f7f4; border: 1px solid #e4e2dc; border-radius: 20px; padding: 3px 10px; margin-bottom: 16px; }
+.kvv-add-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px 20px; font-size: 16px; font-weight: 700; border-radius: 10px; border: none; background: #15803d; color: #fff; cursor: pointer; transition: background .15s; }
+.kvv-add-btn:hover { background: #166534; }
+.kvv-add-hint { margin-top: 10px; text-align: center; font-size: 12px; color: #9a9895; }
+.kvv-steps { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e4e2dc; }
+.kvv-steps h5 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9a9895; margin: 0 0 10px; }
+.kvv-step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+.kvv-step__num { width: 22px; height: 22px; background: #1C9ABF; color: #fff; border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.kvv-step__text { font-size: 12px; color: #5f5e5a; line-height: 1.4; }
+.kvv-step__text strong { color: #1a1a1a; }
+@media(max-width:767px) {
+  .kvv-cols { flex-direction: column; }
+  .kvv-right { width: 100%; flex: none; }
+}
+</style>
+
+<section class="product-detail-default">
+    <loadingindicator ng-show="loadingIndicator" title="{{'Please wait while we fetch product information' | r | xlat}}" />
+
+    <div class="kvv-page">
+
+        <div class="kvv-context">
+            <a href ng-click="addToOrder()"><i class="fa fa-arrow-left"></i> Back to Kit</a>
+        </div>
+
+        <div class="kvv-banner">
+            <div class="kvv-banner__icon"><i class="fa fa-check" aria-hidden="true"></i></div>
+            <div class="kvv-banner__text">
+                <h4>Your design is ready!</h4>
+                <p>Review it below, then click <strong>Add to Kit</strong> to continue.</p>
+            </div>
+        </div>
+
+        <!-- Show content once product has loaded (more reliable than ng-if Variant) -->
+        <div class="kvv-cols" ng-if="LineItem.Product">
+
+            <!-- LEFT: Preview -->
+            <div class="kvv-left">
+                <div class="kvv-preview-card">
+                    <div class="kvv-preview-card__img">
+                        <loadingindicator ng-show="loadingImage" />
+                        <!-- Show variant preview, fall back to product image -->
+                        <img ng-show="LineItem.Variant.PreviewUrl || LineItem.Variant.LargeImageUrl || LineItem.Product.LargeImageUrl"
+                             id="451_img_prod_lg"
+                             class="img-responsive"
+                             ng-src="{{LineItem.Variant.PreviewUrl || LineItem.Variant.LargeImageUrl || LineItem.Product.LargeImageUrl}}"
+                             imageonload />
+                        <div ng-hide="LineItem.Variant.PreviewUrl || LineItem.Variant.LargeImageUrl || LineItem.Product.LargeImageUrl"
+                             style="color:#c8c6c2;font-size:48px;padding:40px 0">
+                            <i class="fa fa-image" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <!-- Action buttons — only for VariableText products with a saved variant -->
+                    <div class="kvv-preview-card__actions" ng-show="LineItem.Product.Type=='VariableText' && LineItem.Variant && LineItem.Variant.InteropID">
+                        <button ng-if="currentOrder.Status != 'AwaitingApproval' && !EditingLineItem"
+                                class="btn btn-default"
+                                redirect="/kit/{{kitID}}/{{kitIndex}}/{{kitProductInteropID}}/{{LineItem.Variant.InteropID}}/edit">
+                            <i class="fa fa-pencil" aria-hidden="true"></i> View / Edit
+                        </button>
+                        <button class="btn btn-default"
+                                ng-show="LineItem.Variant.ProofUrl"
+                                ng-click="getPdf(LineItem.Variant.ProofUrl)">
+                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i> View PDF
+                        </button>
+                        <button class="btn btn-danger btn-sm"
+                                ng-if="currentOrder.Status != 'AwaitingApproval' && !EditingLineItem"
+                                ng-click="deleteVariant(LineItem.Variant, true)"
+                                title="Remove this design">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Info + Add to Kit -->
+            <div class="kvv-right">
+                <div class="kvv-info-card">
+                    <div class="kvv-info-card__header">
+                        <h3>{{LineItem.Variant.ExternalID || LineItem.Product.Name || 'Your Design'}}</h3>
+                        <p ng-show="LineItem.Product.Name && LineItem.Variant.ExternalID">{{LineItem.Product.Name}}</p>
+                    </div>
+                    <div class="kvv-info-card__body">
+                        <span class="kvv-info-card__badge" ng-show="LineItem.Product.ExternalID">
+                            <i class="fa fa-tag" aria-hidden="true"></i> {{LineItem.Product.ExternalID}}
+                        </span>
+
+                        <!-- Add to Kit button -->
+                        <button class="kvv-add-btn" type="button" id="451_btn_orderadd" ng-click="addToOrder()">
+                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                            Add to Kit
+                        </button>
+                        <p class="kvv-add-hint">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                            Your design is saved. Click above to link it to your kit.
+                        </p>
+
+                        <div class="kvv-steps">
+                            <h5>What happens next</h5>
+                            <div class="kvv-step">
+                                <div class="kvv-step__num">1</div>
+                                <div class="kvv-step__text">You'll return to your kit with this design in the list.</div>
+                            </div>
+                            <div class="kvv-step">
+                                <div class="kvv-step__num">2</div>
+                                <div class="kvv-step__text">Click on your design to select it.</div>
+                            </div>
+                            <div class="kvv-step">
+                                <div class="kvv-step__num">3</div>
+                                <div class="kvv-step__text">Click <strong>Save &amp; Continue</strong> to move to the next item.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Loading state while product fetches -->
+        <div ng-if="!LineItem.Product" style="text-align:center;padding:40px;color:#9a9895">
+            <i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+            <p style="margin-top:12px">Loading your design...</p>
+        </div>
+
+    </div>
+
+    <div class="navbar-fixed-bottom">
+        <div class="view-error-message" ng-show="showAddToCartErrors && lineItemErrors.length > 0">
+            <ul class="alert-warning">
+                <li class="text-center">
+                    <span class="badge"><i class="fa fa-exclamation-circle fa-inverse"></i> {{lineItemErrors.length}}</span>
+                </li>
+                <li class="text-center">
+                    <ul ng-class="{'one': errorSection == 'open', 'two': errorSection == ''}">
+                        <li class="alert-warning" ng-repeat="e in lineItemErrors">{{e | xlat}}</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
