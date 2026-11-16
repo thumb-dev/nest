@@ -102,7 +102,7 @@ function($scope, Product, $routeParams, $modal) {
 			return;
 		}
 
-		let searchTerm = $scope.searchTermList.pop();
+		var searchTerm = $scope.searchTermList.pop();
 		console.log('Searching for:', searchTerm);
 		Product.search(null, searchTerm, null, function(products, count) {
 			productList = currentProductList.concat(products);

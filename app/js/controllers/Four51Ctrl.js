@@ -160,7 +160,7 @@ function ($scope, $route, $timeout, $location, $modal, Punchout, $451, User, Ord
 				if(user.Phone && /^\d{4}-\d{2}\-\d{2}/.test(user.Phone)){
 					hireDate = new Date(user.Phone.slice(0,10));
 					user.Phone = "";
-					!!+hireDate && user.CustomFields && jQuery.each(user.CustomFields,(i,el) => {
+					!!+hireDate && user.CustomFields && jQuery.each(user.CustomFields,function(i,el){
 						if(el.Name == "TheNestSchoolsHireDateHistory"){
 							try{
 								hireDateHistory = JSON.parse(el.Value);

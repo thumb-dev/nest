@@ -40,7 +40,7 @@ function ($scope, $sce, $route, $location, $http, $timeout, User) {
 
     var _login = function() {
         // Wrap the callback-based function in a promise
-        return new Promise((resolve, reject) => {
+        return new Promise(function(resolve, reject) {
             User.login($scope.credentials, function(data) {
                 $timeout(function() {
                     console.log('Login data:', data); // Debugging: Log the login response
@@ -73,7 +73,7 @@ function ($scope, $sce, $route, $location, $http, $timeout, User) {
         })
         .then(function(data) {
             // Ensure $scope.user is defined
-            return new Promise((resolve, reject) => {
+            return new Promise(function(resolve, reject) {
                 if ($scope.user) {
                     resolve($scope.user);
                 } else {
@@ -98,7 +98,8 @@ function ($scope, $sce, $route, $location, $http, $timeout, User) {
                 var formatter = new Intl.DateTimeFormat('en-US', options);
                 var parts = formatter.formatToParts(currentDate);
 
-                var estDateString = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}`;
+                var getPart = function(type) { for (var i = 0; i < parts.length; i++) { if (parts[i].type === type) return parts[i].value; } };
+                var estDateString = getPart("year") + "-" + getPart("month") + "-" + getPart("day") + "T" + getPart("hour") + ":" + getPart("minute") + ":" + getPart("second");
 
                 var webhookData = {
                     username: user.Username,
