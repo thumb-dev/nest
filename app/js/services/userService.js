@@ -146,7 +146,7 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 	var giftItemType = function(user){
 		var hireDateHistory, date, hireDate = false, orderDate = false, type = false;
 		user && user.CustomFields && jQuery.each(user.CustomFields,function(i,el){
-			if(el.Name == "TheNestSchoolsHireDateHistory"){
+			if(el.Name == "Nest_Newhire_Date"){
 				try{
 					hireDateHistory = JSON.parse(el.Value);
 				} catch(e){}

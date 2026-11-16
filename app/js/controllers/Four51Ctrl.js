@@ -167,7 +167,7 @@ function ($scope, $route, $timeout, $location, $modal, Punchout, $451, User, Ord
 					hireDate = new Date(user.Phone.slice(0,10));
 					user.Phone = "";
 					!!+hireDate && user.CustomFields && jQuery.each(user.CustomFields,function(i,el){
-						if(el.Name == "TheNestSchoolsHireDateHistory"){
+						if(el.Name == "Nest_Newhire_Date"){
 							try{
 								hireDateHistory = JSON.parse(el.Value);
 							} catch(e){}

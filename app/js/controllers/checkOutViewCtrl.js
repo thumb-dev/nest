@@ -24,7 +24,7 @@ function ($scope, $routeParams, $location, $filter, $rootScope, $451, User, Orde
 			function(data) {
 				var hireDateHistory, update = false;
 				$scope.user.CustomFields && jQuery.each($scope.user.CustomFields,function(i,el){
-					if(el.Name == "TheNestSchoolsHireDateHistory"){
+					if(el.Name == "Nest_Newhire_Date"){
 						try{
 							hireDateHistory = JSON.parse(el.Value);
 						} catch(e){}
