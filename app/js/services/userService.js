@@ -21,9 +21,9 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 		}
 	}
 
-	var _refresh = function() {
+	var _refresh = function(success) {
 		store.remove(_cacheName);
-		_get();
+		_get(success);
 	};
 
 	var _get = function(success) {

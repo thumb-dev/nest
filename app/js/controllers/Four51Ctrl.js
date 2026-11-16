@@ -153,9 +153,15 @@ function ($scope, $route, $timeout, $location, $modal, Punchout, $451, User, Ord
 		});
 	}
 
+	// Load the user fresh from 451 once per page load, so hire date changes made
+	// in admin are picked up on reload instead of waiting for a logout/login.
+	var userRefreshed = false;
+
 	function init() {
 		if (Security.isAuthenticated()) {
-			User.get(function (user) {
+			var loadUser = userRefreshed ? User.get : User.refresh;
+			userRefreshed = true;
+			loadUser(function (user) {
 				var hireDate = false, hireDateHistory = false, update = false;
 				if(user.Phone && /^\d{4}-\d{2}\-\d{2}/.test(user.Phone)){
 					hireDate = new Date(user.Phone.slice(0,10));
