@@ -121,7 +121,7 @@ function e2eDeleteMessageFromList(strJQSelect, strWhichList, blnDeleteNow){
 
 describe('Messages login', function() {
     it("should allow a user to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLogin("coreproduser","fails345", C_debug);
@@ -479,7 +479,7 @@ describe('logout/cleanup', function(){
 
 describe('Message without authentication', function() {
     it("should force a user to login", function() {
-        browser().navigateTo('../../nest/index.html#/message/38007023x');
+        browser().navigateTo('../../app/index.html#/message/38007023x');
         if(C_debug){pause();}
     });
 
@@ -496,7 +496,7 @@ describe('Message without authentication', function() {
 
 describe('Deleted Message without authentication', function() {
     it("should force a user to login", function() {
-        browser().navigateTo('../../nest/index.html#/message/39539271x'); //39539271x is a deleted message
+        browser().navigateTo('../../app/index.html#/message/39539271x'); //39539271x is a deleted message
         if(C_debug){pause();}
     });
 
@@ -512,7 +512,7 @@ describe('Deleted Message without authentication', function() {
 
 describe('Invalid Message without authentication', function() {
     it("should force a user to login", function() {
-        browser().navigateTo('../../nest/index.html#/message/38007023a'); //38007023x is the valid one
+        browser().navigateTo('../../app/index.html#/message/38007023a'); //38007023x is the valid one
         if(C_debug){pause();}
     });
 

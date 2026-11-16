@@ -8,7 +8,7 @@ var C_debug = false;
 //standard login/logout functionality
 describe('SPA login with valid user/pass', function() {
    it("should navigate to the index page to login", function() {
-       browser().navigateTo('../../nest/');
+       browser().navigateTo('../../app/');
        expect(element('#451qa_msg_login').text()).toBe("");
     });
 
@@ -27,7 +27,7 @@ describe('SPA login with valid user/pass', function() {
 
 describe('SPA login without valid username', function() {
     it("should navigate to the index page to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLoginNoTest("failme","fails543", C_debug);
@@ -40,7 +40,7 @@ describe('SPA login without valid username', function() {
 
 describe('SPA login without valid password', function() {
     it("should navigate to the index page to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLoginNoTest("coreproduser","fails543", C_debug);
@@ -53,7 +53,7 @@ describe('SPA login without valid password', function() {
 
 describe('SPA login without user or pass', function() {
     it("should navigate to the index page to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLoginNoTest("","", C_debug);
@@ -94,7 +94,7 @@ describe('SPA logout', function() {
 
 describe('SPA attempt to view a product without authentication', function() {
     it("tries to go to the product page", function() {
-        browser().navigateTo('../../nest/product/default/Static%20Prod');
+        browser().navigateTo('../../app/product/default/Static%20Prod');
     });
 
     it('but gets a login form instead', function() {
@@ -106,7 +106,7 @@ describe('SPA attempt to view a product without authentication', function() {
 
 describe('SPA attempt to view a product WITH authentication', function() {
     it("tries to go to the product page", function() {
-        browser().navigateTo('../../nest/product/default/Static%20Prod');
+        browser().navigateTo('../../app/product/default/Static%20Prod');
     });
 
     it('but gets a login form instead', function() {
@@ -135,7 +135,7 @@ describe('SPA attempt to view a product WITH authentication', function() {
 //test some permissions
 describe('SPA login of inactive user', function() {
     it("should navigate to the index page to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLoginNoTest("coreprodautoinactiveuser","fails345", C_debug);
@@ -148,7 +148,7 @@ describe('SPA login of inactive user', function() {
 
 describe('SPA login of user that hasnt accepted terms/conditions yet', function() {
     it("should navigate to the index page to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLoginNoTest("coreprodautonotermsuser","fails345", C_debug);
@@ -161,22 +161,22 @@ describe('SPA login of user that hasnt accepted terms/conditions yet', function(
     });
 
     it("should prevent them from moving away from the conditions page until they accept them", function() {
-        browser().navigateTo('../../nest/product/default/pstest1');
+        browser().navigateTo('../../app/product/default/pstest1');
         expect(browser().location().url()).toBe("/conditions");
 
-        browser().navigateTo('../../nest/catalog/varspecprods');
+        browser().navigateTo('../../app/catalog/varspecprods');
         expect(browser().location().url()).toBe("/conditions");
 
-        browser().navigateTo('../../nest/admin');
+        browser().navigateTo('../../app/admin');
         expect(browser().location().url()).toBe("/conditions");
 
-        browser().navigateTo('../../nest/favoriteorders');
+        browser().navigateTo('../../app/favoriteorders');
         expect(browser().location().url()).toBe("/conditions");
 
-        browser().navigateTo('../../nest/order');
+        browser().navigateTo('../../app/order');
         expect(browser().location().url()).toBe("/conditions");
 
-        browser().navigateTo('../../nest/message');
+        browser().navigateTo('../../app/message');
         expect(browser().location().url()).toBe("/conditions");
     });
 
@@ -190,7 +190,7 @@ describe('SPA login of user that hasnt accepted terms/conditions yet', function(
         element("#451qa_btn_terms_accept").click();
         expect(browser().location().url()).toBe("/catalog");
 
-        browser().navigateTo('../../nest/product/default/pstest1');
+        browser().navigateTo('../../app/product/default/pstest1');
         expect(browser().location().url()).toBe("/product/default/pstest1");
 
     });
@@ -201,11 +201,11 @@ describe('SPA login of user that hasnt accepted terms/conditions yet', function(
 
     it("should now log them in and navigate where they want to go without accepting terms conditions again", function() {
 
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
 
         expect(browser().location().url()).toBe("/catalog");
 
-        browser().navigateTo('../../nest/product/default/pstest1');
+        browser().navigateTo('../../app/product/default/pstest1');
         expect(browser().location().url()).toBe("/product/default/pstest1");
 
     });
@@ -216,7 +216,7 @@ describe('SPA login of user that hasnt accepted terms/conditions yet', function(
 
 describe('SPA login of punchout user', function() {
     it("should navigate to the index page to login", function() {
-        browser().navigateTo('../../nest/');
+        browser().navigateTo('../../app/');
     });
 
     e2eLoginNoTest("coreprodautopunchoutuser","fails345", C_debug);
