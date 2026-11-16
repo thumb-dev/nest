@@ -5,7 +5,7 @@
 describe('451orders UI', function() {
 
   beforeEach(function() {
-    browser().navigateTo('../../app/index.html');
+    browser().navigateTo('../../nest/index.html');
   });
 
 

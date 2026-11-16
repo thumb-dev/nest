@@ -14,7 +14,7 @@ var C_debug = false;
 
 describe('Category login', function() {
     it("should allow a user to login", function() {
-        browser().navigateTo('../../app/');
+        browser().navigateTo('../../nest/');
     });
 
     e2eLoginNoTest("coreproduser","fails345", C_debug);
