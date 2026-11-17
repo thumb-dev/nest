@@ -74,76 +74,104 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 	$scope.PunchoutSession = Punchout.punchoutSession;
 
 	// Gift redemption notice (replaces the old browser confirm() pop-ups).
-	// image: optional 960x340 banner, e.g. "images/gift-newhire.jpg" (relative to the app folder).
-	//        Leave blank and the modal opens without a banner.
+	// image: optional banner, 960x340 (2.8:1), e.g. "images/gift-newhire.jpg" (relative to the app folder).
+	//        Leave blank to show the Nest logo on a light blue background instead.
 	// category: the gift catalog category; up to three products with photos are shown in the modal.
 	var GIFT_NOTICES = {
 		"New Hire": {
-			label: "New hire gift",
-			title: "Welcome to The Nest",
-			message: "As a thank-you for joining us, you can choose one item from our new hire gift collection.",
+			label: "Free new hire gift",
+			title: "Welcome to The Nest!",
+			message: "We're so glad you're here. To welcome you, pick out one item from our new hire gift collection, completely free.",
+			gift: "new hire gift",
 			image: "",
 			category: "GiftItemsNewHire",
 			path: "/catalog/GiftItemsNewHire"
 		},
 		"Anniversary": {
-			label: "Anniversary gift",
-			title: "Happy work anniversary",
-			message: "Thank you for another year with The Nest. You can choose one item from our anniversary gift collection.",
+			label: "Free anniversary gift",
+			title: "Happy Work Anniversary!",
+			message: "Thank you for another great year with us. To celebrate, pick out one item from our anniversary gift collection, completely free.",
+			gift: "anniversary gift",
 			image: "",
 			category: "GiftItemsAnniversary",
 			path: "/catalog/GiftItemsAnniversary"
 		}
 	};
 
-	var GIFT_MODAL_TEMPLATE = [
+	var GIFT_MODAL_STYLE = [
 		'<style>',
-		'.gift-notice-modal .modal-dialog {width:480px; max-width:calc(100% - 32px); margin:80px auto;}',
-		'.gift-notice-modal .modal-content {position:relative; width:100% !important; padding:0; border-radius:4px; box-shadow:0 4px 24px rgba(0,0,0,.18); overflow:hidden; font-family:"Open Sans", Arial, sans-serif;}',
-		'.gift-notice-modal .gift-banner {display:block; width:100%; height:170px; object-fit:cover;}',
-		'.gift-notice-modal a.gift-close {position:absolute; top:14px; right:16px; z-index:2; color:#242629; font-size:18px; line-height:1; opacity:.55; cursor:pointer; text-decoration:none;}',
+		'.gift-notice-modal .modal-dialog {width:600px; max-width:calc(100% - 32px); margin:60px auto;}',
+		'.gift-notice-modal.gift-confirm .modal-dialog {width:500px; margin-top:120px;}',
+		'.gift-notice-modal .modal-content {position:relative; width:100% !important; padding:0; border-radius:8px; box-shadow:0 8px 32px rgba(0,0,0,.22); overflow:hidden; text-align:center;}',
+		'.gift-notice-modal .gift-hero {position:relative; padding-top:35.42%; background:#e3f1f8; overflow:hidden;}',
+		'.gift-notice-modal .gift-hero-logo {position:absolute; left:50%; top:50%; height:66%; transform:translate(-50%,-50%);}',
+		'.gift-notice-modal .gift-hero-img {position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;}',
+		'.gift-notice-modal a.gift-close {position:absolute; top:12px; right:12px; z-index:2; width:32px; height:32px; line-height:32px; border-radius:4px; background:#fff; color:#242629; font-size:16px; text-align:center; cursor:pointer; text-decoration:none; opacity:.9;}',
 		'.gift-notice-modal a.gift-close:hover {opacity:1;}',
-		'.gift-notice-modal.has-banner a.gift-close {top:10px; right:10px; padding:6px 7px; border-radius:4px; background:#fff; opacity:.9;}',
-		'.gift-notice-modal .gift-body {padding:28px 32px 0;}',
-		'.gift-notice-modal .gift-label {margin:0 0 6px; color:#007FA3; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase;}',
-		'.gift-notice-modal h3 {margin:0 0 10px; font-size:22px; font-weight:700; color:#242629;}',
-		'.gift-notice-modal .gift-message {margin:0; font-size:14px; line-height:1.6; color:#55595e;}',
-		'.gift-notice-modal .gift-option-list {display:flex; gap:12px; padding:22px 32px 0;}',
+		'.gift-notice-modal .gift-body {padding:30px 48px 0; font-family:"Open Sans", Arial, sans-serif;}',
+		'.gift-notice-modal .gift-label {margin:0 0 8px; color:#007FA3; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;}',
+		'.gift-notice-modal h2 {margin:0 0 12px; font-size:30px; font-weight:700; color:#242629;}',
+		'.gift-notice-modal.gift-confirm h2 {font-size:24px;}',
+		'.gift-notice-modal .gift-message {margin:0; font-size:16px; line-height:1.6; color:#55595e;}',
+		'.gift-notice-modal .gift-option-list {display:flex; gap:16px; padding:26px 48px 0; font-family:"Open Sans", Arial, sans-serif;}',
 		'.gift-notice-modal .gift-option {flex:1; min-width:0;}',
-		'.gift-notice-modal .gift-option-img {height:104px; border:1px solid #e5e5e5; border-radius:4px; display:flex; align-items:center; justify-content:center; padding:8px; background:#fff;}',
+		'.gift-notice-modal .gift-option-img {height:140px; border:1px solid #e5e5e5; border-radius:6px; display:flex; align-items:center; justify-content:center; padding:10px; background:#fff;}',
 		'.gift-notice-modal .gift-option-img img {max-width:100%; max-height:100%; object-fit:contain;}',
-		'.gift-notice-modal .gift-option-name {margin-top:6px; font-size:12px; line-height:1.35; color:#55595e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}',
-		'.gift-notice-modal .gift-notice-actions {display:flex; justify-content:flex-end; gap:10px; margin-top:24px; padding:16px 32px; border-top:1px solid #eee;}',
-		'.gift-notice-modal .gift-notice-actions .btn {padding:10px 18px; font-size:12px;}',
-		'.gift-notice-modal .btn-redeem {background:#242629; border:1px solid #242629; color:#fff; font-weight:bold; letter-spacing:1.35px; text-transform:uppercase; border-radius:4px;}',
+		'.gift-notice-modal .gift-option-name {margin-top:8px; font-size:13px; line-height:1.35; color:#3B3E41; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}',
+		'.gift-notice-modal .gift-option-free {font-size:12px; font-weight:700; color:#007FA3; text-transform:uppercase; letter-spacing:1px;}',
+		'.gift-notice-modal .gift-notice-actions {display:flex; justify-content:center; gap:12px; padding:30px 48px 36px;}',
+		'.gift-notice-modal .gift-notice-actions .btn {min-width:170px; padding:13px 22px; font-size:14px;}',
+		'.gift-notice-modal.gift-confirm .gift-notice-actions {padding:28px 36px 32px;}',
+		'.gift-notice-modal.gift-confirm .gift-notice-actions .btn {flex:1; min-width:0; padding:13px 14px; font-size:13px;}',
+		'.gift-notice-modal .btn-redeem {background:#242629; border:1px solid #242629; color:#fff; font-family:"Open Sans", Arial, sans-serif; font-weight:bold; letter-spacing:1.35px; text-transform:uppercase; border-radius:4px;}',
 		'.gift-notice-modal .btn-redeem:hover, .gift-notice-modal .btn-redeem:focus {background:#007FA3; border-color:#007FA3; color:#fff;}',
 		'@media (max-width:767px) {',
-		'.gift-notice-modal .modal-dialog {margin:24px auto;}',
-		'.gift-notice-modal .gift-banner {height:130px;}',
+		'.gift-notice-modal .modal-dialog, .gift-notice-modal.gift-confirm .modal-dialog {margin:20px auto;}',
 		'.gift-notice-modal .gift-body {padding:24px 20px 0;}',
-		'.gift-notice-modal h3 {font-size:20px;}',
-		'.gift-notice-modal .gift-option-list {gap:8px; padding:18px 20px 0;}',
-		'.gift-notice-modal .gift-option-img {height:80px; padding:6px;}',
-		'.gift-notice-modal .gift-notice-actions {flex-direction:column-reverse; padding:14px 20px 18px;}',
-		'.gift-notice-modal .gift-notice-actions .btn {width:100%;}',
+		'.gift-notice-modal h2 {font-size:24px;}',
+		'.gift-notice-modal .gift-message {font-size:15px;}',
+		'.gift-notice-modal .gift-option-list {gap:8px; padding:20px 20px 0;}',
+		'.gift-notice-modal .gift-option-img {height:90px; padding:6px;}',
+		'.gift-notice-modal .gift-option-name {font-size:12px;}',
+		'.gift-notice-modal .gift-notice-actions {flex-direction:column-reverse; gap:10px; padding:24px 20px;}',
+		'.gift-notice-modal .gift-notice-actions .btn {width:100%; min-width:0;}',
 		'}',
-		'</style>',
-		'<a class="gift-close" ng-click="close()" aria-label="Close"><i class="fa fa-times"></i></a>',
-		'<img class="gift-banner" ng-if="notice.image" ng-src="{{notice.image}}" alt="" />',
+		'</style>'
+	].join('');
+
+	var GIFT_MODAL_TEMPLATE = GIFT_MODAL_STYLE + [
+		'<div class="gift-hero">',
+			'<img class="gift-hero-logo" ng-if="!notice.image" src="images/favicon.png" alt="" />',
+			'<img class="gift-hero-img" ng-if="notice.image" ng-src="{{notice.image}}" alt="" />',
+			'<a class="gift-close" ng-click="later()" aria-label="Close"><i class="fa fa-times"></i></a>',
+		'</div>',
 		'<div class="gift-body">',
 			'<p class="gift-label">{{notice.label}}</p>',
-			'<h3>{{notice.title}}</h3>',
+			'<h2>{{notice.title}}</h2>',
 			'<p class="gift-message">{{notice.message}}</p>',
 		'</div>',
 		'<div class="gift-option-list" ng-if="products.length">',
 			'<div class="gift-option" ng-repeat="p in products">',
 				'<div class="gift-option-img"><img ng-src="{{p.image}}" alt="{{p.name}}" /></div>',
 				'<div class="gift-option-name" title="{{p.name}}">{{p.name}}</div>',
+				'<div class="gift-option-free">Free</div>',
 			'</div>',
 		'</div>',
 		'<div class="gift-notice-actions">',
-			'<button type="button" class="btn btn-info" ng-click="later()">Not now</button>',
-			'<button type="button" class="btn btn-redeem" ng-click="redeem()">View gifts</button>',
+			'<button type="button" class="btn btn-info" ng-click="later()">Maybe Later</button>',
+			'<button type="button" class="btn btn-redeem" ng-click="redeem()">Redeem</button>',
+		'</div>'
+	].join('');
+
+	var GIFT_CONFIRM_TEMPLATE = GIFT_MODAL_STYLE + [
+		'<a class="gift-close" ng-click="later()" aria-label="Close"><i class="fa fa-times"></i></a>',
+		'<div class="gift-body">',
+			'<h2>Are you sure?</h2>',
+			'<p class="gift-message">This reminder will keep popping up until you redeem your free {{notice.gift}}.</p>',
+		'</div>',
+		'<div class="gift-notice-actions">',
+			'<button type="button" class="btn btn-info" ng-click="later()">Remind Me Later</button>',
+			'<button type="button" class="btn btn-redeem" ng-click="redeem()">Redeem</button>',
 		'</div>'
 	].join('');
 
@@ -167,23 +195,27 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 		);
 	}
 
-	function openGiftModal(notice) {
-		var modalInstance = $modal.open({
+	// Opens a gift modal. Redeem goes to the gift category; any other way of
+	// closing it (button, X, Esc, backdrop) runs onLater.
+	function showGiftModal(notice, template, windowClass, loadProducts, onLater) {
+		$modal.open({
 			backdrop: true,
 			keyboard: true,
-			windowClass: 'gift-notice-modal' + (notice.image ? ' has-banner' : ''),
-			template: GIFT_MODAL_TEMPLATE,
+			windowClass: windowClass,
+			template: template,
 			controller: ['$scope', '$modalInstance', 'notice', function ($scope, $modalInstance, notice) {
 				$scope.notice = notice;
 				// Open right away; product photos fill in when they load (never blocks the modal).
 				$scope.products = [];
-				loadGiftProducts(notice.category).then(function (list) {
-					$scope.products = list;
-				});
+				if (loadProducts) {
+					loadGiftProducts(notice.category).then(function (list) {
+						$scope.products = list;
+					});
+				}
 				$scope.redeem = function () {
 					$modalInstance.close(true);
 				};
-				$scope.later = $scope.close = function () {
+				$scope.later = function () {
 					$modalInstance.dismiss('later');
 				};
 			}],
@@ -192,13 +224,28 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 					return notice;
 				}
 			}
-		});
-
-		modalInstance.result.then(function (redeem) {
-			if (redeem) {
-				$location.path(notice.path);
+		}).result.then(function () {
+			$location.path(notice.path);
+		}, function () {
+			if (onLater) {
+				onLater();
 			}
 		});
+	}
+
+	function openGiftModal(notice) {
+		showGiftModal(notice, GIFT_MODAL_TEMPLATE, 'gift-notice-modal', true, function () {
+			showGiftModal(notice, GIFT_CONFIRM_TEMPLATE, 'gift-notice-modal gift-confirm', false);
+		});
+	}
+
+	// The gift notice shows once per visit (browser session) until the gift is ordered;
+	// after checkout, User.giftItemType returns false and it stops.
+	function giftNoticeShown() {
+		try { return !!sessionStorage.getItem("giftItemNotice"); } catch (e) { return false; }
+	}
+	function setGiftNoticeShown() {
+		try { sessionStorage.setItem("giftItemNotice", 1); } catch (e) {}
 	}
 
 	// Load the user fresh from 451 once per page load, so hire date changes made
@@ -314,8 +361,9 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 					$timeout(function(){
 						var type = User.giftItemType($scope.user);
 						var notice = GIFT_NOTICES[type];
-						if(notice && !localStorage.getItem("giftItemNotice")){
-							localStorage.setItem("giftItemNotice",1);
+						// Skip while they're already browsing the gift category.
+						if(notice && !giftNoticeShown() && $location.path().indexOf(notice.path) !== 0){
+							setGiftNoticeShown();
 							openGiftModal(notice);
 						}
 					},1000);
