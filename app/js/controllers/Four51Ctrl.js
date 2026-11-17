@@ -103,8 +103,7 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 		'.gift-notice-modal .modal-dialog {width:600px; max-width:calc(100% - 32px); margin:60px auto;}',
 		'.gift-notice-modal.gift-confirm .modal-dialog {width:500px; margin-top:120px;}',
 		'.gift-notice-modal .modal-content {position:relative; width:100% !important; padding:0; border-radius:8px; box-shadow:0 8px 32px rgba(0,0,0,.22); overflow:hidden; text-align:center;}',
-		'.gift-notice-modal .gift-hero {position:relative; padding-top:35.42%; background:#e3f1f8; overflow:hidden;}',
-		'.gift-notice-modal .gift-hero-logo {position:absolute; left:50%; top:50%; height:66%; transform:translate(-50%,-50%);}',
+		'.gift-notice-modal .gift-hero {position:relative; padding-top:35.42%; background:#e3f1f8 url(images/favicon.png) no-repeat center center; background-size:auto 66%; overflow:hidden;}',
 		'.gift-notice-modal .gift-hero-img {position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;}',
 		'.gift-notice-modal a.gift-close {position:absolute; top:12px; right:12px; z-index:2; width:32px; height:32px; line-height:32px; border-radius:4px; background:#fff; color:#242629; font-size:16px; text-align:center; cursor:pointer; text-decoration:none; opacity:.9;}',
 		'.gift-notice-modal a.gift-close:hover {opacity:1;}',
@@ -123,8 +122,16 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 		'.gift-notice-modal .gift-notice-actions .btn {min-width:170px; padding:13px 22px; font-size:14px;}',
 		'.gift-notice-modal.gift-confirm .gift-notice-actions {padding:28px 36px 32px;}',
 		'.gift-notice-modal.gift-confirm .gift-notice-actions .btn {flex:1; min-width:0; padding:13px 14px; font-size:13px;}',
-		'.gift-notice-modal .btn-redeem {background:#242629; border:1px solid #242629; color:#fff; font-family:"Open Sans", Arial, sans-serif; font-weight:bold; letter-spacing:1.35px; text-transform:uppercase; border-radius:4px;}',
-		'.gift-notice-modal .btn-redeem:hover, .gift-notice-modal .btn-redeem:focus {background:#007FA3; border-color:#007FA3; color:#fff;}',
+		'.gift-notice-modal .gift-notice-actions .btn {font-family:"Open Sans", Arial, sans-serif; font-weight:700; letter-spacing:1.35px; text-transform:uppercase; border-radius:6px; border:2px solid #007FA3; transition:background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;}',
+		'.gift-notice-modal .btn-redeem {background:#007FA3; color:#fff; box-shadow:0 2px 6px rgba(0,127,163,.25);}',
+		'.gift-notice-modal .btn-redeem:hover {background:#006a88; border-color:#006a88; color:#fff; transform:translateY(-2px); box-shadow:0 8px 18px rgba(0,127,163,.35);}',
+		'.gift-notice-modal .btn-later {background:#fff; color:#007FA3;}',
+		'.gift-notice-modal .btn-later:hover {background:#e8f4f8; color:#006a88; transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,127,163,.15);}',
+		'.gift-notice-modal .gift-notice-actions .btn:active {transform:translateY(0); box-shadow:none;}',
+		'.gift-notice-modal .gift-notice-actions .btn:focus {outline:none; color:inherit;}',
+		'.gift-notice-modal .btn-redeem:focus {color:#fff;}',
+		'.gift-notice-modal .btn-later:focus {color:#007FA3;}',
+		'.gift-notice-modal .gift-notice-actions .btn:focus-visible {box-shadow:0 0 0 3px rgba(0,127,163,.35);}',
 		'@media (max-width:767px) {',
 		'.gift-notice-modal .modal-dialog, .gift-notice-modal.gift-confirm .modal-dialog {margin:20px auto;}',
 		'.gift-notice-modal .gift-body {padding:24px 20px 0;}',
@@ -141,7 +148,6 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 
 	var GIFT_MODAL_TEMPLATE = GIFT_MODAL_STYLE + [
 		'<div class="gift-hero">',
-			'<img class="gift-hero-logo" ng-if="!notice.image" src="images/favicon.png" alt="" />',
 			'<img class="gift-hero-img" ng-if="notice.image" ng-src="{{notice.image}}" alt="" />',
 			'<a class="gift-close" ng-click="later()" aria-label="Close"><i class="fa fa-times"></i></a>',
 		'</div>',
@@ -158,7 +164,7 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 			'</div>',
 		'</div>',
 		'<div class="gift-notice-actions">',
-			'<button type="button" class="btn btn-info" ng-click="later()">Maybe Later</button>',
+			'<button type="button" class="btn btn-later" ng-click="later()">Maybe Later</button>',
 			'<button type="button" class="btn btn-redeem" ng-click="redeem()">Redeem</button>',
 		'</div>'
 	].join('');
@@ -170,7 +176,7 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 			'<p class="gift-message">This reminder will keep popping up until you redeem your free {{notice.gift}}.</p>',
 		'</div>',
 		'<div class="gift-notice-actions">',
-			'<button type="button" class="btn btn-info" ng-click="later()">Remind Me Later</button>',
+			'<button type="button" class="btn btn-later" ng-click="later()">Remind Me Later</button>',
 			'<button type="button" class="btn btn-redeem" ng-click="redeem()">Redeem</button>',
 		'</div>'
 	].join('');
