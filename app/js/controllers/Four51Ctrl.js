@@ -190,9 +190,13 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 			keyboard: true,
 			windowClass: 'gift-notice-modal',
 			template: GIFT_MODAL_TEMPLATE,
-			controller: ['$scope', '$modalInstance', 'notice', 'products', function ($scope, $modalInstance, notice, products) {
+			controller: ['$scope', '$modalInstance', 'notice', function ($scope, $modalInstance, notice) {
 				$scope.notice = notice;
-				$scope.products = products;
+				// Open right away; product photos fill in when they load (never blocks the modal).
+				$scope.products = [];
+				loadGiftProducts(notice.category).then(function (list) {
+					$scope.products = list;
+				});
 				$scope.redeem = function () {
 					$modalInstance.close(true);
 				};
@@ -203,9 +207,6 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 			resolve: {
 				notice: function () {
 					return notice;
-				},
-				products: function () {
-					return loadGiftProducts(notice.category);
 				}
 			}
 		});
