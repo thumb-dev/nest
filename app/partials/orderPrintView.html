@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div ng-if="!(user.Permissions.contains('HidePricing'))">
+            <div ng-if="!(user.Permissions.contains('HidePricing') || (order | giftorder))">
                 <div>
                     <h3>
                         {{('Order' | r) + ' ' + ('Summary' | r) | xlat}}
@@ -104,14 +104,14 @@
                                 </address>
                             </div>
                         </div>
-                        <div ng-if="!(user.Permissions.contains('HidePricing'))">
+                        <div ng-if="!(user.Permissions.contains('HidePricing') || (order | giftorder))">
                             <p>{{'Unit Price' | r | xlat}}: {{item.UnitPrice | culturecurrency}}</p>
                         </div>
                         <div>
                             <p ng-show="item.Product.QuantityMultiplier == 1">x {{item.Quantity}}</span>
                             <p ng-show="item.Product.QuantityMultiplier > 1" >x {{item.Product.QuantityMultiplier * item.Quantity}}</span>
                         </div>
-                        <div ng-if="!(user.Permissions.contains('HidePricing'))">
+                        <div ng-if="!(user.Permissions.contains('HidePricing') || (order | giftorder))">
                             {{'Total' | r | xlat}}: {{item.LineTotal | culturecurrency}}
                         </div>
                         <div ng-show="item.TotalShipped">

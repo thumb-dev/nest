@@ -298,7 +298,7 @@
 					  </p>
 					</div>
 					<div class="col-md-7">
-					  <div class="row" ng-if="!(user.Permissions.contains('HidePricing'))">
+					  <div class="row" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
 						<!--<div class="col-xs-6">
 						  <p ng-show="hidePrices == false">
 							<small>{{'Unit Price' | r | xlat}}</small>
@@ -500,7 +500,7 @@
 				  <!-- <div class="col-md-4 col-lg-3">
 							  <giftcardredemption ng-if="user.Permissions.contains('ViewPromotions')" />
 						  </div> -->
-				  <!--<div class="col-md-3 col-md-offset-5 col-lg-4 text-right" ng-if="!(user.Permissions.contains('HidePricing')) && hidePrices == false">
+				  <!--<div class="col-md-3 col-md-offset-5 col-lg-4 text-right" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder)) && hidePrices == false">
 					<h4 class="text-primary">
 					  <strong>{{'Subtotal' | r | xlat}} <span class="text-success">{{currentOrder.Subtotal | culturecurrency}}</span></strong>
 					</h4>
@@ -522,19 +522,19 @@
 			  <div class="order-summary-inner-container">
 				<p class="order-summary-header">Order Summary</p>
 				<p>
-				  <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing'))">
+				  <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
 					<span class="text-info">{{'Subtotal' | r | xlat}}</span>
 					<span class="pull-right">{{currentOrder.Subtotal | culturecurrency}}</span>
 				  </p>
-				  <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing'))">
+				  <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
 					<span class="text-info">{{'Tax' | r | xlat}}</span>
 					<span class="pull-right">{{currentOrder.TaxCost || 0 | culturecurrency}}</span>
 				  </p>
-				  <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing'))">
+				  <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
 					<span class="text-info">{{('Shipping' | r) | xlat}}</span>
 					<span class="pull-right">TBD</span>
 				  </p>
-				  <h4 class="order-summary-total" ng-if="!(user.Permissions.contains('HidePricing'))">
+				  <h4 class="order-summary-total" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
 					<strong>{{'Total' | r | xlat}}</strong>
 					<span class="text-success pull-right" style="color: #000000;"><strong>{{currentOrder.Total | culturecurrency}}</strong></span>
 				  </h4>

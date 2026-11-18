@@ -110,7 +110,7 @@
             <h4 ng-show="LineItem.Product.ExternalID" class="text-info" style="text-transform:uppercase;font-weight:800;color: black;">
               {{'ID' | r | xlat}}: {{LineItem.Product.ExternalID}}
             </h4>
-            <h2 class="text-success" ng-show="LineItem.PriceSchedule.PriceBreaks.length == 1" ng-if="!(user.Permissions.contains('HidePricing'))">
+            <h2 class="text-success" ng-show="LineItem.PriceSchedule.PriceBreaks.length == 1" ng-if="!(user.Permissions.contains('HidePricing') || (LineItem.Product | giftitem))">
               {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
             </h2>
             <p ng-bind-html="trustedDescription(LineItem.Product)" ng-show="LineItem.Product.Description" />
@@ -119,7 +119,7 @@
         	  </p>
             <br />
             <!-- PRICE SCHEDULE PANEL! --->
-            <priceScheduleTable ng-if="!(user.Permissions.contains('HidePricing'))" ps='LineItem.PriceSchedule' p='LineItem.Product'></priceScheduleTable>
+            <priceScheduleTable ng-if="!(user.Permissions.contains('HidePricing') || (LineItem.Product | giftitem))" ps='LineItem.PriceSchedule' p='LineItem.Product'></priceScheduleTable>
             <p ng-show="LineItem.Product.DisplayInventory && inventoryDisplay(LineItem.Product, LineItem.Variant) != undefined && (LineItem.Product.InteropID === 'ADT-DRK-014' || LineItem.Product.InteropID === 'ADT-PRO-041' || LineItem.Product.InteropID === 'ADT-PRO-042')" style="padding-top:20px;">
                 {{'Quantity Available' | r | xlat}}: {{inventoryDisplay(LineItem.Product, LineItem.Variant) }}
             </p>

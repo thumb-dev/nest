@@ -74,7 +74,7 @@ function ContentModalCtrl($scope, $route, $location, $modal, Product, Order, Use
                     '<div class="secondary-title product-modal-title">{{item.Product.Name}}</div>',
                     '<div class="item-info">',
                       '<p>{{item.Product.ExternalID}}</p>',
-                      '<p>ITEM SUBTOTAL: {{(item.LineTotal || variantitemsOrderTotal) | culturecurrency}}</p>',
+                      '<p ng-if="!(item.Product | giftitem)">ITEM SUBTOTAL: {{(item.LineTotal || variantitemsOrderTotal) | culturecurrency}}</p>',
                       '</div>',
                     '</div>',
                   '<div class="col-xs-12 col-md-6 col-md-offset-1">',

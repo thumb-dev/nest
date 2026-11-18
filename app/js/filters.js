@@ -120,3 +120,33 @@ four51.app.filter('shipperFilter', ['Address', function(Address) {
     return results;
   }
 }]);
+
+(function() {
+  // Gift items (products in the "GiftItem" static spec group) never show a price.
+  // Usage: ng-if="!(LineItem.Product | giftitem)"
+  // Products listed on the gift category pages count as gift items even when the
+  // list data doesn't include spec groups.
+  var GIFT_CATEGORY_PATH = /^\/catalog\/(nest_nhk|nest_ag)(\/|$)/i;
+  function isGiftProduct(product) {
+    return !!(product && product.StaticSpecGroups && product.StaticSpecGroups.GiftItem);
+  }
+  four51.app.filter('giftitem', ['$location', function($location) {
+    return function(product) {
+      return isGiftProduct(product) || GIFT_CATEGORY_PATH.test($location.path());
+    };
+  }]);
+
+  // True when an order (cart) contains a gift item. Gift items can't be combined
+  // with other items, so a gift order's totals are hidden too.
+  // Usage: ng-if="!(currentOrder | giftorder)"
+  four51.app.filter('giftorder', function() {
+    return function(order) {
+      var items = order && order.LineItems;
+      if (!items) return false;
+      for (var i = 0; i < items.length; i++) {
+        if (isGiftProduct(items[i].Product)) return true;
+      }
+      return false;
+    };
+  });
+})();

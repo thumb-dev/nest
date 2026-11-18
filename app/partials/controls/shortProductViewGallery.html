@@ -59,7 +59,7 @@
                 <h3 class="text-center hidden-xs">{{LineItem.Product.Name}}</h3>
                  <div>
                      ! <p ng-bind-html="trustedDescription(LineItem.Product)" ng-show="LineItem.Product.Description" ></p>
-                      <p ng-show="LineItem.PriceSchedule.PriceBreaks[0]" ng-if="!(user.Permissions.contains('HidePricing'))">
+                      <p ng-show="LineItem.PriceSchedule.PriceBreaks[0]" ng-if="!(user.Permissions.contains('HidePricing') || (LineItem.Product | giftitem))">
                          {{LineItem.PriceSchedule.PriceBreaks[0].Quantity}}
                          <span ng-show="LineItem.Product.QuantityMultiplier > 1">(x {{LineItem.Product.QuantityMultiplier}})</span>
                          {{'for' | xlat}} {{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
@@ -75,7 +75,7 @@
             </div> -->
       <!-- <h3 class="catName ng-binding" ng-bind-html="LineItem.Product.Name" style="color: pink;"></h3> -->
       <p class="text-center ng-binding productListImage" style="" ng-bind-html="LineItem.Product.Name" ng-mouseover="" />
-      <div ng-hide="$parent.currentCategory.InteropID === 'adt_top10' || $parent.currentCategory.InteropID === 'adt_bk'">
+      <div ng-hide="$parent.currentCategory.InteropID === 'adt_top10' || $parent.currentCategory.InteropID === 'adt_bk' || (LineItem.Product | giftitem)">
         <span>{{LineItem.PriceSchedule.PriceBreaks[0].Price | culturecurrency}}
       </div>
       <p ng-show="(LineItem.Product.DisplayInventory && inventoryDisplay(LineItem.Product, LineItem.Variant) != undefined) && ($parent.currentCategory.InteropID === 'adt_welcome' || $parent.currentCategory.InteropID === 'adt_top10' || $parent.currentCategory.InteropID === 'adt_bk')" style="margin: 0;padding-top: 10px;">

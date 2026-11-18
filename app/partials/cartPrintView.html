@@ -17,7 +17,7 @@
             <h3>
                 {{'Cart Summary' | r | xlat}}
             </h3>
-            <div ng-if="!user.Permissions.contains('HidePricing')">
+            <div ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
                 <p>
                     {{'Subtotal' | r | xlat}}: <span>{{currentOrder.Subtotal | culturecurrency}}</span>
                 </p>
@@ -44,13 +44,13 @@
                 </div>
                 <div>
                     <div>
-                        <div ng-if="!(user.Permissions.contains('HidePricing'))">
+                        <div ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
                             {{'Unit Price' | r | xlat}}: {{item.UnitPrice | culturecurrency}}
                         </div>
                         <div>
                             {{'Quantity' | r | xlat}}: {{item.Quantity}}
                         </div>
-                        <div ng-if="!(user.Permissions.contains('HidePricing'))">
+                        <div ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
                             {{'Total' | r | xlat}}: {{item.LineTotal | culturecurrency}}
                         </div>
                     </div>

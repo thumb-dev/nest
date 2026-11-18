@@ -123,15 +123,15 @@
         <span class="text-info">{{'Items' | r | xlat}}</span>
         <span class="pull-right">{{currentOrder.LineItems.length}}</span>
       </p>
-      <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing'))">
+      <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
         <span class="text-info">{{'Subtotal' | r | xlat}}</span>
         <span class="pull-right">{{currentOrder.Subtotal | culturecurrency}}</span>
       </p>
-      <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing'))">
+      <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
         <span class="text-info">{{('Shipping' | r) + ' ' + ('Costs' | r) | xlat}}</span>
         <span class="pull-right">{{currentOrder.ShippingCost | culturecurrency}}</span>
       </p>
-      <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing'))">
+      <p class="order-summary-body" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
         <span class="text-info">{{'Tax' | r | xlat}}</span>
         <span class="pull-right">{{currentOrder.TaxCost || 0 | culturecurrency}}</span>
       </p>
@@ -167,11 +167,11 @@
         </div>
       </div>
 
-      <h4 class="order-summary-total" ng-if="!(user.Permissions.contains('HidePricing'))">
+      <h4 class="order-summary-total" ng-if="!(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">
         <strong>{{'Total' | r | xlat}}</strong>
         <span class="text-success pull-right" style="color: #000000;"><strong>{{currentOrder.Total | culturecurrency}}</strong></span>
       </h4>
-      <p class="text-info text-left" ng-if="user.Company.TaxMethod != 'NoTax' && !user.Permissions.contains('HidePricing')">{{('Shipping' | r) + ', handling and tax may be added to this subtotal.' | xlat}}</p>
+      <p class="text-info text-left" ng-if="user.Company.TaxMethod != 'NoTax' && !(user.Permissions.contains('HidePricing') || (currentOrder | giftorder))">{{('Shipping' | r) + ', handling and tax may be added to this subtotal.' | xlat}}</p>
 
       <ul>
         <li style="padding-top: 15px;padding-bottom: 15px;">

@@ -14,7 +14,7 @@
             </div>
             <div class="panel-body">
                 <p ng-bind-html='LineItem.Product.Description'></p>
-                <span ng-if="!(user.Permissions.contains('HidePricing'))">
+                <span ng-if="!(user.Permissions.contains('HidePricing') || (LineItem.Product | giftitem))">
                    <priceScheduleTable ps='LineItem.PriceSchedule' p='LineItem.Product' />
                 </span>
             </div>
