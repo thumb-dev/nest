@@ -118,7 +118,7 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 
 	var giftItemStart = new Date("2026-11-01");
 	var giftItemCheck = function(user,lineItems,lineItem){
-	  var msg = false, giftOrder = false, giftItem = !!lineItem && four51.isGiftProduct(lineItem.Product), giftGroup;
+	  var msg = false, giftOrder = false, giftItem = !!lineItem && four51.isGiftProduct(lineItem.Product), productGiftType;
 
 	  if(lineItems.length){
 	  	if(four51.isGiftProduct(lineItems[0].Product)){
@@ -133,8 +133,8 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 	  }
 	  else if(giftItem){
 	  	giftItem = giftItemType(user);
-	  	giftGroup = four51.giftItemGroup(lineItem.Product);
-	  	if(giftGroup.Specs && giftGroup.Specs.Type && giftGroup.Specs.Type.Value != giftItem){
+	  	productGiftType = four51.giftType(lineItem.Product);
+	  	if(productGiftType && productGiftType != giftItem){
 	  		msg = "You are not eligible to order this gift item.";
 	  	}
 	  	else if(1 < +lineItem.Quantity){

@@ -1,5 +1,5 @@
-four51.app.controller('Four51Ctrl', ['$scope', '$route', '$timeout', '$location', '$modal', '$resource', 'Punchout', '$451', 'User', 'Order', 'Security', 'OrderConfig', 'Category', 'AppConst','XLATService', 'GoogleAnalytics', 'SpendingAccount',
-function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451, User, Order, Security, OrderConfig, Category, AppConst, XLATService, GoogleAnalytics, SpendingAccount) {
+four51.app.controller('Four51Ctrl', ['$scope', '$route', '$timeout', '$location', '$modal', '$resource', 'Punchout', '$451', 'User', 'Order', 'Security', 'OrderConfig', 'Category', 'AppConst','XLATService', 'GoogleAnalytics', 'SpendingAccount', 'GiftItems',
+function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451, User, Order, Security, OrderConfig, Category, AppConst, XLATService, GoogleAnalytics, SpendingAccount, GiftItems) {
 	$scope.AppConst = AppConst;
 	$scope.scroll = 0;
 	$scope.isAnon = $451.isAnon; //need to know this before we have access to the user object
@@ -300,6 +300,8 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 
 				function doInit(user){
 					$scope.user = user;
+					// Load which products are gift items (used to hide their prices).
+					GiftItems.load();
 					$scope.adminMember = false;
 					$scope.testUser = false;
 					angular.forEach($scope.user.Groups, function(group){

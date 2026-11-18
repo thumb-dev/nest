@@ -122,12 +122,18 @@ four51.app.filter('shipperFilter', ['Address', function(Address) {
 }]);
 
 (function() {
-  // Gift items never show a price. A product is a gift item when it has a static
-  // spec group named "GiftItem". The name match ignores case, spaces and
-  // punctuation ("Gift Item", "giftitem", "Gift Items" all count). If the group has
-  // an "Item" spec (like HidePrice), a value of "false" turns it off.
-  // Shared as four51.giftItemGroup / four51.isGiftProduct so the cart, checkout
-  // and gift eligibility checks all agree on what a gift item is.
+  // GIFT ITEMS
+  // A product is a gift item when either:
+  //   1. it is in a gift category: nest_nhk (New Hire) or nest_ag (Anniversary), or
+  //   2. it has a static spec group named "GiftItem" (case, spaces and punctuation
+  //      ignored). An "Item" spec of "false" in that group turns it off.
+  // Gift items never show a price, and an order containing one hides its totals.
+  // four51.isGiftProduct / four51.giftType are shared with the cart, checkout and
+  // gift eligibility checks so everything agrees on what a gift item is.
+  var GIFT_CATEGORIES = { nest_nhk: 'New Hire', nest_ag: 'Anniversary' };
+  var GIFT_CATEGORY_PATH = /^\/catalog\/(nest_nhk|nest_ag)(\/|$)/i;
+  var giftProductCategory = {}; // product InteropID -> gift category
+
   function norm(s) {
     return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   }
@@ -140,21 +146,52 @@ four51.app.filter('shipperFilter', ['Address', function(Address) {
     });
     return found;
   }
-  function isGiftProduct(product) {
+  function specIsGift(product) {
     var g = giftItemGroup(product);
     if (!g) return false;
     var item = g.Specs && g.Specs.Item;
     return !(item && String(item.Value).toLowerCase() === 'false');
   }
+  function isGiftProduct(product) {
+    return !!product && (!!giftProductCategory[product.InteropID] || specIsGift(product));
+  }
+  // "New Hire", "Anniversary" or null. The spec's Type wins if it is set.
+  function giftType(product) {
+    var g = giftItemGroup(product);
+    if (g && g.Specs && g.Specs.Type && g.Specs.Type.Value) return g.Specs.Type.Value;
+    return (product && GIFT_CATEGORIES[giftProductCategory[product.InteropID]]) || null;
+  }
   four51.giftItemGroup = giftItemGroup;
   four51.isGiftProduct = isGiftProduct;
+  four51.giftType = giftType;
+
+  // Loads the product IDs in the gift categories once per page load.
+  // Four51Ctrl calls load() after login; the filters call it too, just in case.
+  four51.app.factory('GiftItems', ['$resource', '$451', function($resource, $451) {
+    var started = false;
+    function loadCategory(category, page) {
+      $resource($451.api('Products')).get({ CategoryInteropID: category, SearchTerms: '', Page: page, PageSize: 100 }).$promise.then(function(data) {
+        var list = (data && data.List) || [];
+        angular.forEach(list, function(p) {
+          if (p && p.InteropID) giftProductCategory[p.InteropID] = category;
+        });
+        if (list.length && data.Count > page * 100) loadCategory(category, page + 1);
+      });
+    }
+    return {
+      load: function() {
+        if (started) return;
+        started = true;
+        angular.forEach(GIFT_CATEGORIES, function(type, category) { loadCategory(category, 1); });
+      }
+    };
+  }]);
 
   // Usage: ng-if="!(LineItem.Product | giftitem)"
-  // Products listed on the gift category pages count as gift items even when the
-  // list data doesn't include spec groups.
-  var GIFT_CATEGORY_PATH = /^\/catalog\/(nest_nhk|nest_ag)(\/|$)/i;
-  four51.app.filter('giftitem', ['$location', function($location) {
+  // Everything listed on a gift category page counts as a gift item.
+  four51.app.filter('giftitem', ['$location', 'GiftItems', function($location, GiftItems) {
     return function(product) {
+      GiftItems.load();
       return isGiftProduct(product) || GIFT_CATEGORY_PATH.test($location.path());
     };
   }]);
@@ -162,14 +199,15 @@ four51.app.filter('shipperFilter', ['Address', function(Address) {
   // True when an order (cart) contains a gift item. Gift items can't be combined
   // with other items, so a gift order's totals are hidden too.
   // Usage: ng-if="!(currentOrder | giftorder)"
-  four51.app.filter('giftorder', function() {
+  four51.app.filter('giftorder', ['GiftItems', function(GiftItems) {
     return function(order) {
       var items = order && order.LineItems;
       if (!items) return false;
+      GiftItems.load();
       for (var i = 0; i < items.length; i++) {
         if (isGiftProduct(items[i].Product)) return true;
       }
       return false;
     };
-  });
+  }]);
 })();
