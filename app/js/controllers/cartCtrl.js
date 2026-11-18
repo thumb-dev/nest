@@ -156,9 +156,7 @@ function ($scope, $routeParams, $location, $451, Order, OrderConfig, User, Punch
 					$scope.currentOrder
 					&& $scope.currentOrder.LineItems
 					&& $scope.currentOrder.LineItems.length
-					&& $scope.currentOrder.LineItems[0].Product
-					&& $scope.currentOrder.LineItems[0].Product.StaticSpecGroups
-					&& $scope.currentOrder.LineItems[0].Product.StaticSpecGroups.GiftItem
+					&& four51.isGiftProduct($scope.currentOrder.LineItems[0].Product)
 					&& 1 < $scope.currentOrder.LineItems[0].Quantity
 				){
 					alert("You may only order 1 gift item.");

@@ -118,10 +118,10 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 
 	var giftItemStart = new Date("2026-11-01");
 	var giftItemCheck = function(user,lineItems,lineItem){
-	  var msg = false, giftOrder = false, giftItem = lineItem && lineItem.Product && lineItem.Product.StaticSpecGroups && "GiftItem" in lineItem.Product.StaticSpecGroups;
+	  var msg = false, giftOrder = false, giftItem = !!lineItem && four51.isGiftProduct(lineItem.Product), giftGroup;
 
 	  if(lineItems.length){
-	  	if(lineItems[0].Product && lineItems[0].Product.StaticSpecGroups && "GiftItem" in lineItems[0].Product.StaticSpecGroups){
+	  	if(four51.isGiftProduct(lineItems[0].Product)){
 				giftOrder = true;
 			}
 			if(giftOrder && giftItem){
@@ -133,7 +133,8 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 	  }
 	  else if(giftItem){
 	  	giftItem = giftItemType(user);
-	  	if(lineItem.Product.StaticSpecGroups.GiftItem.Specs && lineItem.Product.StaticSpecGroups.GiftItem.Specs.Type && lineItem.Product.StaticSpecGroups.GiftItem.Specs.Type.Value != giftItem){
+	  	giftGroup = four51.giftItemGroup(lineItem.Product);
+	  	if(giftGroup.Specs && giftGroup.Specs.Type && giftGroup.Specs.Type.Value != giftItem){
 	  		msg = "You are not eligible to order this gift item.";
 	  	}
 	  	else if(1 < +lineItem.Quantity){

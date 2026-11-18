@@ -122,14 +122,37 @@ four51.app.filter('shipperFilter', ['Address', function(Address) {
 }]);
 
 (function() {
-  // Gift items (products in the "GiftItem" static spec group) never show a price.
+  // Gift items never show a price. A product is a gift item when it has a static
+  // spec group named "GiftItem". The name match ignores case, spaces and
+  // punctuation ("Gift Item", "giftitem", "Gift Items" all count). If the group has
+  // an "Item" spec (like HidePrice), a value of "false" turns it off.
+  // Shared as four51.giftItemGroup / four51.isGiftProduct so the cart, checkout
+  // and gift eligibility checks all agree on what a gift item is.
+  function norm(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  }
+  function giftItemGroup(product) {
+    var groups = product && product.StaticSpecGroups, found = null;
+    if (!groups || typeof groups !== 'object') return null;
+    angular.forEach(groups, function(g, key) {
+      if (found || !g || key === 'VisibleSpecGroups') return;
+      if (norm(key).indexOf('giftitem') === 0 || norm(g.Name).indexOf('giftitem') === 0) found = g;
+    });
+    return found;
+  }
+  function isGiftProduct(product) {
+    var g = giftItemGroup(product);
+    if (!g) return false;
+    var item = g.Specs && g.Specs.Item;
+    return !(item && String(item.Value).toLowerCase() === 'false');
+  }
+  four51.giftItemGroup = giftItemGroup;
+  four51.isGiftProduct = isGiftProduct;
+
   // Usage: ng-if="!(LineItem.Product | giftitem)"
   // Products listed on the gift category pages count as gift items even when the
   // list data doesn't include spec groups.
   var GIFT_CATEGORY_PATH = /^\/catalog\/(nest_nhk|nest_ag)(\/|$)/i;
-  function isGiftProduct(product) {
-    return !!(product && product.StaticSpecGroups && product.StaticSpecGroups.GiftItem);
-  }
   four51.app.filter('giftitem', ['$location', function($location) {
     return function(product) {
       return isGiftProduct(product) || GIFT_CATEGORY_PATH.test($location.path());

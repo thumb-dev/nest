@@ -30,7 +30,7 @@ function ($scope, $routeParams, $location, $filter, $rootScope, $451, User, Orde
 						} catch(e){}
 						if(hireDateHistory){
 							jQuery.each($scope.currentOrder.LineItems,function(i,el){
-								if(el.Product && el.Product.StaticSpecGroups && el.Product.StaticSpecGroups.GiftItem){
+								if(four51.isGiftProduct(el.Product)){
 									i = new Date;
 									hireDateHistory.ordered = i.getUTCFullYear() + "-" + (i.getUTCMonth() + 1 + "").padStart(2,"0") + "-" + (i.getUTCDate() + "").padStart(2,"0");
 									update = true;
