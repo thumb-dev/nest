@@ -46,6 +46,34 @@ four51.app.directive('paymentselector', function() {
 	       
 	        $scope.currentOrder.PaymentMethod = 'CreditCard';
 
+	       // Free gift orders: no payment choice. Charge as a purchase order and
+	       // pick a billing address automatically, since the billing step is hidden.
+	       function isGiftOrder() {
+		       var lines = $scope.currentOrder && $scope.currentOrder.LineItems;
+		       if (!lines || !four51.isGiftProduct) return false;
+		       for (var i = 0; i < lines.length; i++) {
+			       if (four51.isGiftProduct(lines[i].Product)) return true;
+		       }
+		       return false;
+	       }
+	       function applyGiftBilling() {
+		       if (!$scope.currentOrder || !isGiftOrder()) return;
+		       if ($scope.currentOrder.PaymentMethod != 'PurchaseOrder') {
+			       $scope.currentOrder.PaymentMethod = 'PurchaseOrder';
+			       $scope.currentOrder.CreditCardID = null;
+		       }
+		       if (!$scope.currentOrder.BillAddressID && $scope.billaddresses) {
+			       for (var i = 0; i < $scope.billaddresses.length; i++) {
+				       if ($scope.billaddresses[i].IsBilling) {
+					       $scope.currentOrder.BillAddressID = $scope.billaddresses[i].ID;
+					       break;
+				       }
+			       }
+		       }
+	       }
+	       $scope.$watch(isGiftOrder, applyGiftBilling);
+	       $scope.$watch('billaddresses', applyGiftBilling);
+
 	       $scope.$watch('currentOrder.PaymentMethod', function(event) {
 		       if (event == 'BudgetAccount' && $scope.SpendingAccounts) {
 			       if ($scope.SpendingAccounts.length == 1)

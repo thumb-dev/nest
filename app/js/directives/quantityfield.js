@@ -8,10 +8,15 @@ four51.app.directive('quantityfield', ['$451', 'ProductDisplayService', function
         restrict: 'E',
         template: '<div>'+
             '<inlineerror ng-show="lineitem.qtyError" title="{{lineitem.qtyError}}" />'+
-            '<select id="451qa_input_qty" class="form-control" ng-change="qtyChanged(lineitem)" ng-if="lineitem.PriceSchedule.RestrictedQuantity" ng-required="required" ng-model="lineitem.Quantity" ng-options="pb.Quantity as getRestrictedQtyText(pb, lineitem.Product.QuantityMultiplier) for pb in lineitem.PriceSchedule.PriceBreaks" ui-validate="\'validQuantityAddToOrder($value, lineitem)\'"><option value=""></option></select>'+
-            '<input ng-disabled="lineitem.Variant.RecordCount > 0 && lineitem.ID" id="451qa_input_qty" placeholder="0" autocomplete="off" class="form-control" ng-change="qtyChanged(lineitem)" ng-if="!lineitem.PriceSchedule.RestrictedQuantity" type="text" ng-required="required" name="qtyInput" ng-model="lineitem.Quantity" ui-validate="\'validQuantityAddToOrder($value, lineitem)\'"/>'+
+            '<input ng-if="isLockedGift(lineitem)" class="form-control" type="text" value="{{lineitem.Quantity}}" disabled title="Gift items are limited to one" />'+
+            '<select id="451qa_input_qty" class="form-control" ng-change="qtyChanged(lineitem)" ng-if="lineitem.PriceSchedule.RestrictedQuantity && !isLockedGift(lineitem)" ng-required="required" ng-model="lineitem.Quantity" ng-options="pb.Quantity as getRestrictedQtyText(pb, lineitem.Product.QuantityMultiplier) for pb in lineitem.PriceSchedule.PriceBreaks" ui-validate="\'validQuantityAddToOrder($value, lineitem)\'"><option value=""></option></select>'+
+            '<input ng-disabled="lineitem.Variant.RecordCount > 0 && lineitem.ID" id="451qa_input_qty" placeholder="0" autocomplete="off" class="form-control" ng-change="qtyChanged(lineitem)" ng-if="!lineitem.PriceSchedule.RestrictedQuantity && !isLockedGift(lineitem)" type="text" ng-required="required" name="qtyInput" ng-model="lineitem.Quantity" ui-validate="\'validQuantityAddToOrder($value, lineitem)\'"/>'+
             '</div>',
         link: function(scope){
+            // Gift items already in the order can't have their quantity changed.
+            scope.isLockedGift = function(lineitem){
+                return !!(lineitem && lineitem.ID && four51.isGiftProduct && four51.isGiftProduct(lineitem.Product));
+            };
             scope.getRestrictedQtyText = function(priceBreak, qtyMultiplier){
                 var qtyText = priceBreak.Quantity * qtyMultiplier;
                 if(qtyMultiplier > 1)
