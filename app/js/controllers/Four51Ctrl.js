@@ -301,6 +301,7 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 				function doInit(user){
 					$scope.user = user;
 					$scope.adminMember = false;
+					$scope.testUser = false;
 					angular.forEach($scope.user.Groups, function(group){
 						if(group.Name == "Dashboard"){
 							$scope.dashUser = true;
@@ -312,6 +313,8 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 							$scope.salesUser = true;
 						} else if (group.Name == "Insights") {
 							$scope.insightsUser = true;
+						} else if (group.Name == "Test") {
+							$scope.testUser = true;
 						}
 					});
 
@@ -366,8 +369,10 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 					$timeout(function(){
 						var type = User.giftItemType($scope.user);
 						var notice = GIFT_NOTICES[type];
+						// TEMPORARY: gift pop-ups only show for users in the "Test" group.
+						// Remove "$scope.testUser &&" below to turn them on for everyone.
 						// Skip while they're already browsing the gift category.
-						if(notice && !giftNoticeShown() && $location.path().indexOf(notice.path) !== 0){
+						if(notice && $scope.testUser && !giftNoticeShown() && $location.path().indexOf(notice.path) !== 0){
 							setGiftNoticeShown();
 							openGiftModal(notice);
 						}
