@@ -84,8 +84,8 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 			message: "We're so glad you're here. To welcome you, pick out one item from our new hire gift collection, completely free.",
 			gift: "new hire gift",
 			image: "",
-			category: "GiftItemsNewHire",
-			path: "/catalog/GiftItemsNewHire"
+			category: "nest_nhk",
+			path: "/catalog/nest_nhk"
 		},
 		"Anniversary": {
 			label: "Free anniversary gift",
@@ -93,8 +93,8 @@ function ($scope, $route, $timeout, $location, $modal, $resource, Punchout, $451
 			message: "Thank you for another great year with us. To celebrate, pick out one item from our anniversary gift collection, completely free.",
 			gift: "anniversary gift",
 			image: "",
-			category: "GiftItemsAnniversary",
-			path: "/catalog/GiftItemsAnniversary"
+			category: "nest_ag",
+			path: "/catalog/nest_ag"
 		}
 	};
 

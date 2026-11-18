@@ -18,7 +18,7 @@ four51.app.factory('Category', ['$resource', '$451', function($resource, $451) {
 		function f(data){
 			var c = [];
 			data && data.constructor == Array && jQuery.each(data,function(i,el){
-				 ["GiftItemsNewHire","GiftItemsAnniversary"].indexOf(el.InteropID) < 0 && c.push(el);
+				 ["nest_nhk","nest_ag"].indexOf(el.InteropID) < 0 && c.push(el);
 			});
 			return c;
 		}
