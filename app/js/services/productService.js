@@ -1,5 +1,8 @@
 four51.app.factory('Product', ['$resource', '$451', 'Security', 'User', function($resource, $451, Security, User) {
 	var variantCache = [], productCache = [], criteriaCache;
+	// Product lists include InventoryEnabled ("Track Inventory") but the product
+	// detail call may not, so remember it from any list the user has loaded.
+	var inventoryEnabled = {};
 	function _then(fn, data, count) {
 		if (angular.isFunction(fn))
 			fn(data, count);
@@ -83,6 +86,8 @@ four51.app.factory('Product', ['$resource', '$451', 'Security', 'User', function
 			}
 		    product.Variants = variantCache;
 
+		    if (product.InventoryEnabled === undefined && inventoryEnabled.hasOwnProperty(product.InteropID))
+			    product.InventoryEnabled = inventoryEnabled[product.InteropID];
 		    _extend(product);
 			_then(success, product);
 	     });
@@ -111,7 +116,10 @@ four51.app.factory('Product', ['$resource', '$451', 'Security', 'User', function
 	    }
 	    else {
 		    $resource($451.api('Products')).get(criteria).$promise.then(function (products) {
-			    angular.forEach(products.List, _extend);
+			    angular.forEach(products.List, function(p) {
+				    if (p.InventoryEnabled !== undefined) inventoryEnabled[p.InteropID] = p.InventoryEnabled;
+				    _extend(p);
+			    });
 			    for (var i = 0; i <= products.Count - 1; i++) {
 				    if (typeof productCache[i] == 'object') continue;
 				    productCache[i] = products.List[i - (((criteria.Page || 1) - 1) * (criteria.PageSize || 100))] || i;
