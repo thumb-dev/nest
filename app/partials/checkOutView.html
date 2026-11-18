@@ -8,17 +8,6 @@
         <orderdetails/>
         <ordershipping />
         <orderbilling ng-show="currentOrder.BillingEnabled && !(currentOrder | giftorder)"/>
-        <div class="panel-order" ng-if="currentOrder.BillingEnabled && (currentOrder | giftorder)">
-            <div class="panel-heading checkout-container" style="background-color: white; border-bottom: 1px solid #979797;">
-                <h3 class="panel-title">
-                    <i class="pull-left fa fa-check-circle" style="padding-top: 10px; padding-right: 10px;"></i>
-                    <span style="font-size: 35px; font-weight: bold; letter-spacing: -0.74px;">Billing</span>
-                </h3>
-            </div>
-            <div class="panel-body">
-                <p style="margin: 0;">This is a free gift, so there's nothing to pay. Just submit your order to redeem it.</p>
-            </div>
-        </div>
         <orderapprovals ng-show="currentOrder.Approvals" />
         <div class="navbar-fixed-bottom">
             <div class="view-response-message alert-success text-center" alert-show="actionMessage">

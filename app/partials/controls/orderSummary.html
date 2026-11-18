@@ -179,7 +179,8 @@
                     ng-class="{'btn-warning': cart_shipping.$invalid || cart_order.$invalid || cart_billing.$invalid, 'btn-success': !cart_shipping.$invalid && !cart_order.$invalid && !cart_billing.$invalid }"
                     ng-click="submitOrder()" ng-disabled="cart_shipping.$invalid || cart_order.$invalid || cart_billing.$invalid">
                 <i ng-show="cart_shipping.$invalid || cart_order.$invalid || cart_billing.$invalid" class="fa fa-warning"></i>
-                <span>{{('Submit' | r) + ' ' + ('Order' | r) | xlat}}</span>
+                <span ng-if="!(currentOrder | giftorder)">{{('Submit' | r) + ' ' + ('Order' | r) | xlat}}</span>
+                <span ng-if="currentOrder | giftorder">Redeem</span>
             </button>
         </li>
         <li ng-if="continue">
