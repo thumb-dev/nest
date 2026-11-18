@@ -1,5 +1,5 @@
-four51.app.controller('ProductCtrl', ['$scope', '$routeParams', '$route', '$location', '$451', 'Nav', 'Product', 'ProductDisplayService', 'Order', 'Variant', 'User',
-  function($scope, $routeParams, $route, $location, $451, Nav, Product, ProductDisplayService, Order, Variant, User) {
+four51.app.controller('ProductCtrl', ['$scope', '$routeParams', '$route', '$location', '$451', 'Nav', 'Product', 'ProductDisplayService', 'Order', 'Variant', 'User', '$resource',
+  function($scope, $routeParams, $route, $location, $451, Nav, Product, ProductDisplayService, Order, Variant, User, $resource) {
 	$scope.isEditforApproval = $routeParams.orderID && $scope.user.Permissions.contains('EditApprovalOrder');
 	if ($scope.isEditforApproval) {
 	  Order.get($routeParams.orderID, function(order) {
@@ -102,6 +102,19 @@ four51.app.controller('ProductCtrl', ['$scope', '$routeParams', '$route', '$loca
 		$scope.LineItem.Quantity = lineitem.PriceSchedule.DefaultQuantity;
 	}
 
+	// The product detail call doesn't always include InventoryEnabled ("Track Inventory"),
+	// but the product list call does. Look it up there when it's missing so the
+	// PDT can tell inventory items from on-demand items.
+	function loadInventoryEnabled(product) {
+	  if (!product || product.InventoryEnabled !== undefined) return;
+	  $resource($451.api('Products')).get({ SearchTerms: product.InteropID, Page: 1, PageSize: 100 }).$promise.then(function(result) {
+		angular.forEach(result.List, function(p) {
+		  if (p.InteropID == product.InteropID && p.InventoryEnabled !== undefined)
+			product.InventoryEnabled = p.InventoryEnabled;
+		});
+	  });
+	}
+
 	function init(searchTerm, callback) {
 	  ProductDisplayService.getProductAndVariant($routeParams.productInteropID, $routeParams.variantInteropID, function(data) {
 		if (data.product.Type == 'Kit') {
@@ -109,6 +122,7 @@ four51.app.controller('ProductCtrl', ['$scope', '$routeParams', '$route', '$loca
 		}
 		$scope.LineItem.Product = data.product;
 		$scope.LineItem.Variant = data.variant;
+		loadInventoryEnabled(data.product);
 		ProductDisplayService.setNewLineItemScope($scope);
 		ProductDisplayService.setProductViewScope($scope);
 		setDefaultQty($scope.LineItem);
