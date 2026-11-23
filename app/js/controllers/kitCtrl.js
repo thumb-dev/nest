@@ -2,6 +2,27 @@ four51.app.controller('KitCtrl', ['$scope', '$location', '$routeParams', '$timeo
   $scope.addToOrderText = 'Add Kit to Cart';
   $scope.updateKitLineItemText = 'Update';
 
+  // Gift kits (e.g. the men's and women's gift kits) are always one per order:
+  // the quantity step is hidden and the kit goes in at a quantity of 1.
+  // Gift items load in the background (GiftItems in filters.js), so this is
+  // watched rather than checked once when the page loads.
+  $scope.isGiftKit = false;
+  $scope.kitSkipQuantity = false;
+  function kitIsGift() {
+	if (!$scope.Kit || !four51.isGiftProduct) return false;
+	var parent = $scope.kitParentLineItem && $scope.kitParentLineItem.Product;
+	return four51.isGiftProduct($scope.Kit.KitParent) || four51.isGiftProduct(parent);
+  }
+  function setGiftKitQuantity() {
+	var parent = $scope.kitParentLineItem;
+	if ($scope.isGiftKit && parent && !parent.ID) parent.Quantity = 1;
+  }
+  $scope.$watch(kitIsGift, function(gift) {
+	$scope.isGiftKit = gift;
+	$scope.kitSkipQuantity = gift;
+	setGiftKitQuantity();
+  });
+
   $scope.settings = {
 	currentPage: 1,
 	pageSize: 10
@@ -135,6 +156,9 @@ four51.app.controller('KitCtrl', ['$scope', '$location', '$routeParams', '$timeo
 	  if (!$scope.LineItem.ID && $scope.LineItem.PriceSchedule && $scope.LineItem.PriceSchedule.DefaultQuantity) {
 		$scope.LineItem.Quantity = $scope.LineItem.PriceSchedule.DefaultQuantity;
 	  }
+	  $scope.isGiftKit = kitIsGift();
+	  $scope.kitSkipQuantity = $scope.isGiftKit;
+	  setGiftKitQuantity();
 
 	  if ($scope.LineItem.ID) {
 		$scope.addToOrderText = 'Add to Cart';
@@ -563,6 +587,9 @@ four51.app.controller('KitCtrl', ['$scope', '$location', '$routeParams', '$timeo
 	$scope.currentOrder = $scope.currentOrder || {};
 	$scope.currentOrder.LineItems = $scope.currentOrder.LineItems || [];
 
+
+	// Safety net: a new gift kit always goes in at a quantity of 1.
+	if ($scope.isGiftKit && !$scope.LineItem.ID && $scope.LineItem === $scope.kitParentLineItem) $scope.LineItem.Quantity = 1;
 
 	var msg = User.giftItemCheck($scope.user,$scope.currentOrder.LineItems,$scope.LineItem);
 	if(msg){
