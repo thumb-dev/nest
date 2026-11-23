@@ -419,15 +419,16 @@
 					</div>
 				  </div>
 
-				  <!-- Kit contents accordion — only for Kit products -->
+				  <!-- Kit contents accordion — only for Kit products. Gift kits start open so the
+				       shopper can see what is in their gift; other kits start closed. -->
 				  <div class="row" ng-if="item.Product.Type == 'Kit'">
 					<div class="col-xs-12" style="margin-top:6px">
-					  <button type="button" class="kit-cart-toggle" ng-click="item.showKitItems = !item.showKitItems">
-						<i class="fa" ng-class="item.showKitItems ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-						{{item.showKitItems ? 'Hide' : 'View'}} Kit Contents
+					  <button type="button" class="kit-cart-toggle" ng-click="item.showKitItems = !(item.showKitItems != null ? item.showKitItems : (item.Product | giftitem))">
+						<i class="fa" ng-class="(item.showKitItems != null ? item.showKitItems : (item.Product | giftitem)) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+						{{(item.showKitItems != null ? item.showKitItems : (item.Product | giftitem)) ? 'Hide' : 'View'}} Kit Contents
 						<span ng-show="item.Kit && item.Kit.KitItems && item.Kit.KitItems.length" style="color:#9a9895;font-weight:400">({{item.Kit.KitItems.length}} items)</span>
 					  </button>
-					  <div ng-show="item.showKitItems" style="margin-top:6px">
+					  <div ng-show="(item.showKitItems != null ? item.showKitItems : (item.Product | giftitem))" style="margin-top:6px">
 
 						<!-- Loading state -->
 						<div ng-if="item._kitLoaded && !item.Kit"
