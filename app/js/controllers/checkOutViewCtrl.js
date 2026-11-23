@@ -16,43 +16,76 @@ function ($scope, $routeParams, $location, $filter, $rootScope, $451, User, Orde
 	$scope.hasOrderConfig = OrderConfig.hasConfig($scope.currentOrder, $scope.user);
 	$scope.checkOutSection = $scope.hasOrderConfig ? 'order' : 'shipping';
 
+	// Gift redemption: when an order has a gift item (a kit counts by its parent product),
+	// record today's date as "ordered" in the user's Nest_Newhire_Date field, e.g.
+	// {"date":"2026-03-10","ordered":"2026-11-23"}. That stops the gift pop-up and blocks a
+	// second gift until the next work anniversary (see User.giftItemType).
+	function giftField(user) {
+		var field = null;
+		angular.forEach(user && user.CustomFields, function(f) {
+			if (!field && f.Name == 'Nest_Newhire_Date') field = f;
+		});
+		return field;
+	}
+	function giftFieldValue(user) {
+		var f = giftField(user);
+		return f ? f.Value : null;
+	}
+	function markGiftOrdered(user, orders) {
+		var field = giftField(user), hasGift = false, history = null, d;
+		angular.forEach(orders, function(o) {
+			angular.forEach(o && o.LineItems, function(li) {
+				if (!hasGift && li && four51.isGiftProduct(li.Product)) hasGift = true;
+			});
+		});
+		if (!hasGift) return false;
+		if (!field) {
+			console.warn('Gift redeemed, but this user has no Nest_Newhire_Date field to record it in.');
+			return false;
+		}
+		try { history = JSON.parse(field.Value); } catch (e) {}
+		if (!history || history.constructor != Object) history = {};
+		d = new Date();
+		history.ordered = d.getUTCFullYear() + '-' + ('0' + (d.getUTCMonth() + 1)).slice(-2) + '-' + ('0' + d.getUTCDate()).slice(-2);
+		field.Value = JSON.stringify(history);
+		return true;
+	}
+
 	function submitOrder() {
 		$scope.displayLoadingIndicator = true;
 		$scope.submitClicked = true;
 		$scope.errorMessage = null;
 		Order.submit($scope.currentOrder,
 			function(data) {
-				var hireDateHistory, update = false;
-				$scope.user.CustomFields && jQuery.each($scope.user.CustomFields,function(i,el){
-					if(el.Name == "Nest_Newhire_Date"){
-						try{
-							hireDateHistory = JSON.parse(el.Value);
-						} catch(e){}
-						if(hireDateHistory){
-							jQuery.each($scope.currentOrder.LineItems,function(i,el){
-								if(four51.isGiftProduct(el.Product)){
-									i = new Date;
-									hireDateHistory.ordered = i.getUTCFullYear() + "-" + (i.getUTCMonth() + 1 + "").padStart(2,"0") + "-" + (i.getUTCDate() + "").padStart(2,"0");
-									update = true;
-									return false;
-								}
-							});
-						}
-						update && (el.Value = JSON.stringify(hireDateHistory));
-						return false;
-					}
-				});
+				var submitted = $scope.currentOrder;
+				var giftRedeemed = markGiftOrdered($scope.user, [submitted, data]);
 
 				if ($scope.user.Company.GoogleAnalyticsCode) {
 					GoogleAnalytics.ecommerce(data, $scope.user);
 				}
 				$scope.user.CurrentOrderID = null;
-				User.save($scope.user, function(data) {
-					$scope.user = data;
-					$scope.displayLoadingIndicator = false;
+
+				// Save the user (with the gift "ordered" date) BEFORE leaving checkout. The next
+				// page reloads the user from the browser cache, which is only updated once this
+				// save finishes; leaving early brought back the copy without "ordered".
+				User.save($scope.user, function(u) {
+					if (giftRedeemed) {
+						var saved = giftFieldValue(u);
+						if (saved && saved.indexOf('"ordered"') > -1)
+							console.log('Gift redeemed. Nest_Newhire_Date is now ' + saved);
+						else
+							console.warn('Gift redeemed, but 451 did not keep the ordered date. Nest_Newhire_Date is ' + saved + '. Check the field can be changed by the user in 451 admin.');
+					}
+					leave();
+				}, function(err) {
+					console.error('Could not save the gift ordered date to Nest_Newhire_Date:', err);
+					leave();
 				});
-				$scope.currentOrder = null;
-				$location.path('/order/new/' + data.ID);
+				function leave() {
+					$scope.displayLoadingIndicator = false;
+					$scope.currentOrder = null;
+					$location.path('/order/new/' + data.ID);
+				}
 			},
 			function(ex) {
 				$scope.submitClicked = false;
